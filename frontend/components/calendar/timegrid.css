@@ -1,0 +1,288 @@
+/*
+ * CalSync — TimeGrid Premium Styles (Week & Day views only)
+ *
+ * All selectors are scoped to .fc-timegrid so these rules never
+ * affect the Month (dayGrid) view.
+ */
+
+/* ─── 1. Base scrollgrid clean-up ──────────────────────────────────────────── */
+
+.fc-timegrid .fc-scrollgrid {
+  border-color: transparent;
+}
+
+.fc-timegrid .fc-scrollgrid td,
+.fc-timegrid .fc-scrollgrid th {
+  border-color: #e5e7eb;
+}
+
+.dark .fc-timegrid .fc-scrollgrid td,
+.dark .fc-timegrid .fc-scrollgrid th {
+  border-color: #374151;
+}
+
+/* ─── 2. Sticky day/date column headers ────────────────────────────────────── */
+
+/*
+ * FullCalendar v6 renders the col-header inside a sticky scrollgrid section.
+ * Reinforce position:sticky and z-index so the row stays pinned when the
+ * time-slot body scrolls.
+ */
+.fc-timegrid .fc-col-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #ffffff;
+}
+
+.dark .fc-timegrid .fc-col-header {
+  background: #111827;
+}
+
+.fc-timegrid .fc-col-header-cell {
+  padding: 6px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .fc-timegrid .fc-col-header-cell {
+  border-bottom-color: #374151;
+}
+
+/* Day-name text (e.g. "Mon") */
+.fc-timegrid .fc-col-header-cell .fc-col-header-cell-cushion {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 8px;
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.dark .fc-timegrid .fc-col-header-cell .fc-col-header-cell-cushion {
+  color: #9ca3af;
+}
+
+/* Today column header highlight */
+.fc-timegrid .fc-day-today .fc-col-header-cell-cushion {
+  color: #6366f1;
+}
+
+.dark .fc-timegrid .fc-day-today .fc-col-header-cell-cushion {
+  color: #818cf8;
+}
+
+/* ─── 3. All-day row ────────────────────────────────────────────────────────── */
+
+.fc-timegrid .fc-daygrid-body {
+  background: #fafafa;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.dark .fc-timegrid .fc-daygrid-body {
+  background: #1f2937;
+  border-bottom-color: #374151;
+}
+
+/* "all-day" label on the left */
+.fc-timegrid .fc-timegrid-axis-cushion {
+  color: #9ca3af;
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-right: 8px;
+}
+
+/* ─── 4. Hour / slot dividers — subtle light grey ───────────────────────────── */
+
+.fc-timegrid .fc-timegrid-slot {
+  height: 3rem;              /* 48 px per half-hour = 96 px per hour */
+  border-top: 1px solid #f3f4f6;
+}
+
+.dark .fc-timegrid .fc-timegrid-slot {
+  border-top-color: #1f2937;
+}
+
+/* Full-hour lines are slightly more visible */
+.fc-timegrid .fc-timegrid-slot-label {
+  border-top: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.dark .fc-timegrid .fc-timegrid-slot-label {
+  border-top-color: #374151;
+}
+
+/* Minor (half-hour) slot lines — dashed and even lighter */
+.fc-timegrid .fc-timegrid-slot-minor {
+  border-top-style: dashed;
+  border-top-color: #f9fafb;
+}
+
+.dark .fc-timegrid .fc-timegrid-slot-minor {
+  border-top-color: #111827;
+}
+
+/* Time labels */
+.fc-timegrid .fc-timegrid-slot-label-cushion {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #9ca3af;
+  letter-spacing: 0.03em;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+/* Column background */
+.fc-timegrid .fc-timegrid-col {
+  background: #ffffff;
+}
+
+.dark .fc-timegrid .fc-timegrid-col {
+  background: #111827;
+}
+
+/* Today column tint */
+.fc-timegrid .fc-day-today.fc-timegrid-col {
+  background: #f5f3ff !important;   /* very light violet */
+}
+
+.dark .fc-timegrid .fc-day-today.fc-timegrid-col {
+  background: #1e1b4b1a !important;
+}
+
+/* ─── 5. Current-time indicator — red line + circle dot ────────────────────── */
+
+.fc-timegrid-now-indicator-line {
+  border-color: #ef4444 !important;
+  border-top-width: 2px !important;
+  z-index: 4;
+}
+
+/*
+ * FullCalendar renders the "arrow" as a pure-CSS border triangle.
+ * We override it to a filled circle that sits on top of the line.
+ */
+.fc-timegrid-now-indicator-arrow {
+  /* Reset the triangle */
+  border: none !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background-color: #ef4444 !important;
+  /* Centre the dot on the indicator line (line is 2 px tall) */
+  margin-top: -4px !important;
+  margin-left: -5px !important;
+}
+
+/* ─── 6. Event blocks ───────────────────────────────────────────────────────── */
+
+/* Harness — tiny gap between side-by-side concurrent events */
+.fc-timegrid .fc-timegrid-event-harness {
+  padding-right: 2px;
+}
+
+.fc-timegrid .fc-timegrid-event {
+  border-radius: 6px !important;
+  border-width: 0 !important;
+  overflow: hidden;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  transition: filter 0.12s ease, box-shadow 0.12s ease;
+}
+
+.fc-timegrid .fc-timegrid-event:hover {
+  filter: brightness(0.92);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* Inset padding inside the event block */
+.fc-timegrid .fc-timegrid-event .fc-event-main {
+  padding: 3px 6px 2px;
+}
+
+/* Event time — small, slightly muted */
+.fc-timegrid .fc-timegrid-event .fc-event-time {
+  font-size: 0.65rem;
+  font-weight: 500;
+  opacity: 0.85;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* Event title — truncate with ellipsis */
+.fc-timegrid .fc-timegrid-event .fc-event-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* Event title container */
+.fc-timegrid .fc-timegrid-event .fc-event-title-container {
+  overflow: hidden;
+}
+
+/* Mirror event (drag preview) */
+.fc-timegrid .fc-timegrid-event.fc-event-mirror {
+  opacity: 0.6;
+}
+
+/* All-day events in the top strip */
+.fc-timegrid .fc-daygrid-event {
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 0.72rem !important;
+  font-weight: 500 !important;
+  overflow: hidden;
+}
+
+.fc-timegrid .fc-daygrid-event .fc-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── 7. Selection highlight ───────────────────────────────────────────────── */
+
+.fc-timegrid .fc-highlight {
+  background: #6366f11a !important;
+  border-radius: 4px;
+}
+
+/* ─── 8. Scrollbar polish ───────────────────────────────────────────────────── */
+
+.fc-scroller::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.dark .fc-scroller::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+
+.dark .fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}

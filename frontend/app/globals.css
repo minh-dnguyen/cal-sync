@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── FullCalendar theme overrides ─────────────────────────────────────────── */
+:root {
+  --header-height: 3.5rem; /* matches h-14 = 56px */
+  --fc-border-color: #e5e7eb;
+  --fc-button-bg-color: #6366f1;
+  --fc-button-border-color: #6366f1;
+  --fc-button-hover-bg-color: #4f46e5;
+  --fc-button-hover-border-color: #4f46e5;
+  --fc-button-active-bg-color: #4338ca;
+  --fc-today-bg-color: #eef2ff;
+  --fc-event-border-color: transparent;
+  --fc-page-bg-color: #ffffff;
+  --fc-neutral-bg-color: #f9fafb;
+  --fc-list-event-hover-bg-color: #f3f4f6;
+}
+
+.dark {
+  --fc-border-color: #374151;
+  --fc-button-bg-color: #6366f1;
+  --fc-button-border-color: #6366f1;
+  --fc-button-hover-bg-color: #4f46e5;
+  --fc-today-bg-color: #1e1b4b;
+  --fc-page-bg-color: #111827;
+  --fc-neutral-bg-color: #1f2937;
+  --fc-neutral-text-color: #f3f4f6;
+  --fc-list-event-hover-bg-color: #1f2937;
+}
+
+/* FullCalendar dark-mode text fixes */
+.dark .fc-col-header-cell-cushion,
+.dark .fc-daygrid-day-number,
+.dark .fc-timegrid-slot-label-cushion,
+.dark .fc-list-day-cushion,
+.dark .fc-list-event-title,
+.dark .fc-toolbar-title {
+  color: #f3f4f6;
+}
+
+.dark .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  background-color: #6366f1;
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Event pill styles */
+.fc-event {
+  border-radius: 4px !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  padding: 1px 4px !important;
+  cursor: pointer !important;
+}
+
+/* Toolbar buttons */
+.fc .fc-button {
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  text-transform: capitalize !important;
+}
+
+/* Remove FullCalendar's default ugly focus ring */
+.fc .fc-button:focus {
+  box-shadow: 0 0 0 2px #6366f140 !important;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    @apply font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+}
+
+@layer components {
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
+  }
+  .sidebar-link.active {
+    @apply bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300;
+  }
+}
