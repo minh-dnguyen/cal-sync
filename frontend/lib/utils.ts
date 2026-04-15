@@ -34,13 +34,17 @@ export function buildRrule(
   freq: string,
   interval: number,
   byDay?: string[],
-  until?: string
+  until?: string,
+  byMonthDay?: number | null,
 ): string | undefined {
   if (freq === "none") return undefined;
 
   let rule = `FREQ=${freq.toUpperCase()};INTERVAL=${interval}`;
 
-  if (byDay && byDay.length > 0) {
+  // BYMONTHDAY takes precedence for monthly recurrence ("on day X of month")
+  if (byMonthDay && freq === "monthly") {
+    rule += `;BYMONTHDAY=${byMonthDay}`;
+  } else if (byDay && byDay.length > 0) {
     rule += `;BYDAY=${byDay.join(",")}`;
   }
 
@@ -52,13 +56,19 @@ export function buildRrule(
   return rule;
 }
 
-/** Parse a simple RRULE back to form values (best-effort for display) */
-export function parseRrule(rrule: string | null): {
+export interface ParsedRrule {
   freq: string;
   interval: number;
   byDay: string[];
-} {
-  if (!rrule) return { freq: "none", interval: 1, byDay: [] };
+  /** YYYY-MM-DD end date, or empty string if none */
+  until: string;
+  /** Day-of-month for BYMONTHDAY (1-31), or null if not set */
+  byMonthDay: number | null;
+}
+
+/** Parse an RFC 5545 RRULE string back to form values (best-effort for display) */
+export function parseRrule(rrule: string | null): ParsedRrule {
+  if (!rrule) return { freq: "none", interval: 1, byDay: [], until: "", byMonthDay: null };
 
   const parts = Object.fromEntries(
     rrule.split(";").map((p) => {
@@ -67,10 +77,19 @@ export function parseRrule(rrule: string | null): {
     })
   );
 
+  // Convert "20240101T000000Z" → "2024-01-01"
+  let until = "";
+  if (parts["UNTIL"]) {
+    const raw = parts["UNTIL"].replace(/T.*$/, ""); // strip time portion
+    until = `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
+  }
+
   return {
     freq: (parts["FREQ"] ?? "NONE").toLowerCase(),
     interval: parseInt(parts["INTERVAL"] ?? "1", 10),
     byDay: parts["BYDAY"] ? parts["BYDAY"].split(",") : [],
+    until,
+    byMonthDay: parts["BYMONTHDAY"] ? parseInt(parts["BYMONTHDAY"], 10) : null,
   };
 }
 

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Trash2, Bell, RefreshCw, Palette, AlignLeft } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { useCreateEvent, useUpdateEvent, useDeleteEvent } from "@/hooks/useEvents";
-import { buildRrule, parseRrule, isoToLocalInput } from "@/lib/utils";
+import { buildRrule, parseRrule, isoToLocalInput, ParsedRrule } from "@/lib/utils";
 import { CalEvent, CalendarSource, EventCreate, EventUpdate } from "@/types";
 import api from "@/lib/api";
 
@@ -80,6 +80,9 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
   const [interval, setInterval] = useState(1);
   const [byDay, setByDay] = useState<string[]>([]);
   const [until, setUntil] = useState("");
+  // For monthly: "day" = BYMONTHDAY (e.g. every 15th), "week" = BYDAY (default)
+  const [monthlyMode, setMonthlyMode] = useState<"day" | "week">("day");
+  const [byMonthDay, setByMonthDay] = useState<number | null>(null);
 
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
@@ -99,10 +102,21 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
       setCalendarSourceId(event.calendar_source_id ?? localSource?.id ?? "");
       setReminderMinutes(event.reminder_minutes ? String(event.reminder_minutes) : "");
 
-      const { freq: f, interval: i, byDay: bd } = parseRrule(event.rrule);
-      setFreq(f);
-      setInterval(i);
-      setByDay(bd);
+      const parsed: ParsedRrule = parseRrule(event.rrule);
+      setFreq(parsed.freq);
+      setInterval(parsed.interval);
+      setByDay(parsed.byDay);
+      setUntil(parsed.until);
+      if (parsed.freq === "monthly" && parsed.byMonthDay !== null) {
+        setMonthlyMode("day");
+        setByMonthDay(parsed.byMonthDay);
+      } else if (parsed.freq === "monthly") {
+        setMonthlyMode("week");
+        setByMonthDay(null);
+      } else {
+        setMonthlyMode("day");
+        setByMonthDay(null);
+      }
     } else {
       // New event defaults
       const now = new Date();
@@ -120,6 +134,8 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
       setInterval(1);
       setByDay([]);
       setUntil("");
+      setMonthlyMode("day");
+      setByMonthDay(null);
     }
   }, [open, event, defaultStart, defaultEnd, localSource?.id]);
 
@@ -129,7 +145,12 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const rruleStr = buildRrule(freq, interval, byDay, until);
+    // For monthly "on day X" mode derive BYMONTHDAY from startInput if not explicitly set
+    const effectiveByMonthDay =
+      freq === "monthly" && monthlyMode === "day"
+        ? byMonthDay ?? new Date(startInput).getDate()
+        : null;
+    const rruleStr = buildRrule(freq, interval, byDay, until, effectiveByMonthDay);
 
     const payload: EventCreate | EventUpdate = {
       title,
@@ -245,7 +266,15 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
           </label>
           <select
             value={freq}
-            onChange={(e) => setFreq(e.target.value)}
+            onChange={(e) => {
+              const next = e.target.value;
+              setFreq(next);
+              // When switching to monthly, default to "on day X" using start date
+              if (next === "monthly") {
+                setMonthlyMode("day");
+                setByMonthDay(new Date(startInput).getDate() || null);
+              }
+            }}
             className={inputClass}
           >
             {FREQ_OPTIONS.map((o) => (
@@ -286,6 +315,36 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
                       {d.label}
                     </button>
                   ))}
+                </div>
+              )}
+
+              {freq === "monthly" && (
+                <div className="flex rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMonthlyMode("day");
+                      setByMonthDay(new Date(startInput).getDate() || null);
+                    }}
+                    className={`flex-1 py-1.5 font-medium transition-colors ${
+                      monthlyMode === "day"
+                        ? "bg-primary-500 text-white"
+                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
+                    {t("on_day_of_month", { day: byMonthDay ?? new Date(startInput).getDate() })}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setMonthlyMode("week"); setByMonthDay(null); }}
+                    className={`flex-1 py-1.5 font-medium transition-colors border-l border-gray-200 dark:border-gray-600 ${
+                      monthlyMode === "week"
+                        ? "bg-primary-500 text-white"
+                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                    }`}
+                  >
+                    {t("weekly")}
+                  </button>
                 </div>
               )}
 

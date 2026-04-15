@@ -125,6 +125,18 @@ const en = {
 
   // ── FullCalendar all-day label ────────────────────────────────────────────
   all_day_label: "All day",
+
+  // ── Phase 2: Holidays ─────────────────────────────────────────────────────
+  add_holidays:        "Add holidays",
+  syncing_holidays:    "Syncing…",
+  holiday_sync_error:  "Could not sync holidays. Try again.",
+  country_unsupported: "Holidays not available for this country.",
+
+  // ── Phase 2: RRULE polish ─────────────────────────────────────────────────
+  on_day_of_month:   "on day {{day}}",
+  repeat_on_day:     "On day {{day}} of month",
+  end_after_occurrences: "End after",
+  occurrences:       "occurrence(s)",
 };
 
 // ─── French ──────────────────────────────────────────────────────────────────
@@ -227,6 +239,15 @@ const fr: TranslationKeys = {
   theme_label:         "Thème",
   theme_hint:          "Par défaut, suit les préférences du système de l'appareil",
   all_day_label: "Toute la journée",
+
+  add_holidays:          "Ajouter les jours fériés",
+  syncing_holidays:      "Synchronisation…",
+  holiday_sync_error:    "Impossible de synchroniser. Réessayez.",
+  country_unsupported:   "Jours fériés non disponibles pour ce pays.",
+  on_day_of_month:       "le {{day}} du mois",
+  repeat_on_day:         "Le {{day}} de chaque mois",
+  end_after_occurrences: "Terminer après",
+  occurrences:           "occurrence(s)",
 };
 
 // ─── Spanish ─────────────────────────────────────────────────────────────────
@@ -329,6 +350,15 @@ const es: TranslationKeys = {
   theme_label:         "Tema",
   theme_hint:          "Por defecto sigue las preferencias del sistema",
   all_day_label: "Todo el día",
+
+  add_holidays:          "Agregar festivos",
+  syncing_holidays:      "Sincronizando…",
+  holiday_sync_error:    "No se pudieron sincronizar los festivos. Inténtalo de nuevo.",
+  country_unsupported:   "Festivos no disponibles para este país.",
+  on_day_of_month:       "el día {{day}}",
+  repeat_on_day:         "El día {{day}} de cada mes",
+  end_after_occurrences: "Terminar después de",
+  occurrences:           "ocurrencia(s)",
 };
 
 // ─── German ──────────────────────────────────────────────────────────────────
@@ -431,6 +461,15 @@ const de: TranslationKeys = {
   theme_label:         "Design",
   theme_hint:          "Standard folgt den Systemeinstellungen Ihres Geräts",
   all_day_label: "Ganztägig",
+
+  add_holidays:          "Feiertage hinzufügen",
+  syncing_holidays:      "Synchronisierung…",
+  holiday_sync_error:    "Feiertage konnten nicht synchronisiert werden. Erneut versuchen.",
+  country_unsupported:   "Feiertage für dieses Land nicht verfügbar.",
+  on_day_of_month:       "am {{day}}. des Monats",
+  repeat_on_day:         "Am {{day}}. jeden Monats",
+  end_after_occurrences: "Endet nach",
+  occurrences:           "Wiederholung(en)",
 };
 
 // ─── Portuguese ──────────────────────────────────────────────────────────────
@@ -533,6 +572,15 @@ const pt: TranslationKeys = {
   theme_label:         "Tema",
   theme_hint:          "O padrão segue as preferências do sistema do dispositivo",
   all_day_label: "Dia inteiro",
+
+  add_holidays:          "Adicionar feriados",
+  syncing_holidays:      "Sincronizando…",
+  holiday_sync_error:    "Não foi possível sincronizar feriados. Tente novamente.",
+  country_unsupported:   "Feriados não disponíveis para este país.",
+  on_day_of_month:       "no dia {{day}}",
+  repeat_on_day:         "No dia {{day}} de cada mês",
+  end_after_occurrences: "Terminar após",
+  occurrences:           "ocorrência(s)",
 };
 
 // ─── Italian ─────────────────────────────────────────────────────────────────
@@ -635,6 +683,15 @@ const it: TranslationKeys = {
   theme_label:         "Tema",
   theme_hint:          "Per impostazione predefinita, segue le preferenze del sistema del dispositivo",
   all_day_label: "Tutto il giorno",
+
+  add_holidays:          "Aggiungi festività",
+  syncing_holidays:      "Sincronizzazione…",
+  holiday_sync_error:    "Impossibile sincronizzare le festività. Riprova.",
+  country_unsupported:   "Festività non disponibili per questo paese.",
+  on_day_of_month:       "il giorno {{day}}",
+  repeat_on_day:         "Il giorno {{day}} di ogni mese",
+  end_after_occurrences: "Termina dopo",
+  occurrences:           "occorrenza/e",
 };
 
 // ─── Russian ─────────────────────────────────────────────────────────────────
@@ -737,6 +794,15 @@ const ru: TranslationKeys = {
   theme_label:         "Тема",
   theme_hint:          "По умолчанию следует системным настройкам устройства",
   all_day_label: "Весь день",
+
+  add_holidays:          "Добавить праздники",
+  syncing_holidays:      "Синхронизация…",
+  holiday_sync_error:    "Не удалось синхронизировать праздники. Попробуйте ещё раз.",
+  country_unsupported:   "Праздники для этой страны недоступны.",
+  on_day_of_month:       "{{day}}-го числа",
+  repeat_on_day:         "{{day}}-го числа каждого месяца",
+  end_after_occurrences: "Завершить после",
+  occurrences:           "повтор(а/ов)",
 };
 
 // ─── Chinese ─────────────────────────────────────────────────────────────────
@@ -839,6 +905,15 @@ const zh: TranslationKeys = {
   theme_label:         "主题",
   theme_hint:          "默认跟随设备系统偏好",
   all_day_label: "全天",
+
+  add_holidays:          "添加节假日",
+  syncing_holidays:      "同步中…",
+  holiday_sync_error:    "节假日同步失败，请重试。",
+  country_unsupported:   "该国家/地区暂不支持节假日。",
+  on_day_of_month:       "每月{{day}}日",
+  repeat_on_day:         "每月{{day}}日重复",
+  end_after_occurrences: "结束于",
+  occurrences:           "次",
 };
 
 // ─── Japanese ────────────────────────────────────────────────────────────────
@@ -941,6 +1016,15 @@ const ja: TranslationKeys = {
   theme_label:         "テーマ",
   theme_hint:          "デフォルトはデバイスのシステム設定に従います",
   all_day_label: "終日",
+
+  add_holidays:          "祝日を追加",
+  syncing_holidays:      "同期中…",
+  holiday_sync_error:    "祝日を同期できませんでした。もう一度お試しください。",
+  country_unsupported:   "この国の祝日は利用できません。",
+  on_day_of_month:       "毎月{{day}}日",
+  repeat_on_day:         "毎月{{day}}日に繰り返す",
+  end_after_occurrences: "終了する回数",
+  occurrences:           "回",
 };
 
 // ─── Arabic ──────────────────────────────────────────────────────────────────
@@ -1043,6 +1127,15 @@ const ar: TranslationKeys = {
   theme_label:         "السمة",
   theme_hint:          "الافتراضي يتبع إعدادات جهازك",
   all_day_label: "طوال اليوم",
+
+  add_holidays:          "إضافة العطل",
+  syncing_holidays:      "جارٍ المزامنة…",
+  holiday_sync_error:    "تعذّرت مزامنة العطل. حاول مجدداً.",
+  country_unsupported:   "العطل غير متوفرة لهذا البلد.",
+  on_day_of_month:       "في اليوم {{day}}",
+  repeat_on_day:         "في اليوم {{day}} من كل شهر",
+  end_after_occurrences: "ينتهي بعد",
+  occurrences:           "مرة/مرات",
 };
 
 // ─── Korean ──────────────────────────────────────────────────────────────────
@@ -1145,6 +1238,15 @@ const ko: TranslationKeys = {
   theme_label:         "테마",
   theme_hint:          "기본값은 기기의 시스템 설정을 따릅니다",
   all_day_label: "종일",
+
+  add_holidays:          "공휴일 추가",
+  syncing_holidays:      "동기화 중…",
+  holiday_sync_error:    "공휴일을 동기화할 수 없습니다. 다시 시도하세요.",
+  country_unsupported:   "이 국가의 공휴일은 지원되지 않습니다.",
+  on_day_of_month:       "매월 {{day}}일",
+  repeat_on_day:         "매월 {{day}}일 반복",
+  end_after_occurrences: "종료 횟수",
+  occurrences:           "회",
 };
 
 // ─── Vietnamese ──────────────────────────────────────────────────────────────
@@ -1247,6 +1349,15 @@ const vi: TranslationKeys = {
   theme_label:         "Chủ đề",
   theme_hint:          "Mặc định theo tùy chọn hệ thống của thiết bị",
   all_day_label: "Cả ngày",
+
+  add_holidays:          "Thêm ngày lễ",
+  syncing_holidays:      "Đang đồng bộ…",
+  holiday_sync_error:    "Không thể đồng bộ ngày lễ. Hãy thử lại.",
+  country_unsupported:   "Không có dữ liệu ngày lễ cho quốc gia này.",
+  on_day_of_month:       "vào ngày {{day}} hàng tháng",
+  repeat_on_day:         "Ngày {{day}} mỗi tháng",
+  end_after_occurrences: "Kết thúc sau",
+  occurrences:           "lần",
 };
 
 // ─── Turkish ─────────────────────────────────────────────────────────────────
@@ -1349,6 +1460,15 @@ const tr: TranslationKeys = {
   theme_label:         "Tema",
   theme_hint:          "Varsayılan cihazınızın sistem tercihini takip eder",
   all_day_label: "Tüm gün",
+
+  add_holidays:          "Tatil günleri ekle",
+  syncing_holidays:      "Senkronize ediliyor…",
+  holiday_sync_error:    "Tatil günleri senkronize edilemedi. Tekrar deneyin.",
+  country_unsupported:   "Bu ülke için tatil günleri mevcut değil.",
+  on_day_of_month:       "ayın {{day}}. günü",
+  repeat_on_day:         "Her ayın {{day}}. günü",
+  end_after_occurrences: "Sonra bitir",
+  occurrences:           "tekrar",
 };
 
 // ─── Polish ──────────────────────────────────────────────────────────────────
@@ -1451,6 +1571,15 @@ const pl: TranslationKeys = {
   theme_label:         "Motyw",
   theme_hint:          "Domyślnie stosuje preferencje systemu urządzenia",
   all_day_label: "Cały dzień",
+
+  add_holidays:          "Dodaj święta",
+  syncing_holidays:      "Synchronizowanie…",
+  holiday_sync_error:    "Nie udało się zsynchronizować świąt. Spróbuj ponownie.",
+  country_unsupported:   "Święta dla tego kraju są niedostępne.",
+  on_day_of_month:       "{{day}}. dnia miesiąca",
+  repeat_on_day:         "{{day}}. każdego miesiąca",
+  end_after_occurrences: "Zakończ po",
+  occurrences:           "powtórzeniu(ach)",
 };
 
 // ─── Hindi ────────────────────────────────────────────────────────────────────
@@ -1553,6 +1682,15 @@ const hi: TranslationKeys = {
   theme_label:         "थीम",
   theme_hint:          "डिफ़ॉल्ट आपके डिवाइस की सिस्टम प्राथमिकता का अनुसरण करता है",
   all_day_label: "पूरे दिन",
+
+  add_holidays:          "छुट्टियाँ जोड़ें",
+  syncing_holidays:      "सिंक हो रहा है…",
+  holiday_sync_error:    "छुट्टियाँ सिंक नहीं हो सकीं। पुनः प्रयास करें।",
+  country_unsupported:   "इस देश के लिए छुट्टियाँ उपलब्ध नहीं हैं।",
+  on_day_of_month:       "हर महीने {{day}} तारीख को",
+  repeat_on_day:         "महीने की {{day}} तारीख को दोहराएँ",
+  end_after_occurrences: "इसके बाद समाप्त हो",
+  occurrences:           "बार",
 };
 
 // ─── Dutch ────────────────────────────────────────────────────────────────────
@@ -1655,6 +1793,15 @@ const nl: TranslationKeys = {
   theme_label:         "Thema",
   theme_hint:          "Standaard volgt de systeemvoorkeur van je apparaat",
   all_day_label: "Hele dag",
+
+  add_holidays:          "Feestdagen toevoegen",
+  syncing_holidays:      "Synchroniseren…",
+  holiday_sync_error:    "Kon feestdagen niet synchroniseren. Probeer opnieuw.",
+  country_unsupported:   "Feestdagen niet beschikbaar voor dit land.",
+  on_day_of_month:       "op dag {{day}} van de maand",
+  repeat_on_day:         "Op dag {{day}} van elke maand",
+  end_after_occurrences: "Beëindigen na",
+  occurrences:           "herhaling(en)",
 };
 
 export const TRANSLATIONS: Record<string, TranslationKeys> = {

@@ -38,3 +38,21 @@ export function useDeleteEvent() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["events"] }),
   });
 }
+
+/** Sync public holidays for the given country code via Nager.Date.
+ *  Creates (or updates) the holiday CalendarSource and upserts holiday events.
+ *  Invalidates both calendar-sources and events queries on success.
+ */
+export function useSyncHolidays() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (countryCode: string) =>
+      api
+        .post("/api/v1/calendar-sources/holidays/sync", { country_code: countryCode })
+        .then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["calendar-sources"] });
+      qc.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+}

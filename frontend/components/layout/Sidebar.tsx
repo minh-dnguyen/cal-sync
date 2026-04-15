@@ -15,6 +15,7 @@ import { MiniCalendar } from "@/components/calendar/MiniCalendar";
 import { useAuth } from "@/hooks/useAuth";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useUiStore } from "@/store/uiStore";
+import { useSyncHolidays } from "@/hooks/useEvents";
 
 interface SidebarProps {
   open: boolean;
@@ -193,6 +194,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
   const [myCalOpen, setMyCalOpen]    = useState(true);
   const [otherCalOpen, setOtherCalOpen] = useState(true);
+  const [syncError, setSyncError] = useState(false);
 
   const { data: sources = [] } = useQuery<CalendarSource[]>({
     queryKey: ["calendar-sources"],
@@ -205,9 +207,12 @@ export function Sidebar({ open, onClose }: SidebarProps) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["calendar-sources"] }),
   });
 
+  const syncHolidays = useSyncHolidays();
+
   // Split sources by type
   const localSources   = sources.filter((s) => s.source_type === "local");
   const otherSources   = sources.filter((s) => s.source_type !== "local");
+  const holidaySource  = sources.find((s) => s.source_type === "holiday");
 
   // User display name for the main calendar label
   const userName = user?.full_name ?? user?.email ?? "My Calendar";
@@ -288,22 +293,44 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               <CalRow
                 key={src.id}
                 label={src.name}
-                sub={src.source_type}
+                sub={src.source_type === "holiday" ? t("public_holidays") : src.source_type}
                 color={src.color}
                 checked={src.is_visible}
                 onChange={(v) => toggleVisibility.mutate({ id: src.id, is_visible: v })}
               />
             ))}
 
-            {/* Holidays in user's country — Phase 2 placeholder */}
-            <CalRow
-              label={t("holidays_in", { region: regionName })}
-              sub={t("public_holidays")}
-              color="#EF4444"
-              checked={false}
-              disabled
-              badge="Phase 2"
-            />
+            {/* "Add holidays" button — shown only when no holiday source is synced yet */}
+            {!holidaySource && (
+              <button
+                type="button"
+                disabled={syncHolidays.isPending}
+                onClick={() => {
+                  setSyncError(false);
+                  syncHolidays.mutate(region, {
+                    onError: () => setSyncError(true),
+                  });
+                }}
+                className={`flex items-center gap-2.5 px-3 py-1.5 w-full rounded-lg transition-colors text-left ${
+                  syncHolidays.isPending
+                    ? "opacity-60 cursor-wait"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer"
+                }`}
+              >
+                <Globe
+                  size={13}
+                  className={`flex-shrink-0 ${syncHolidays.isPending ? "animate-spin" : "text-red-400"}`}
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate leading-snug">
+                    {syncHolidays.isPending ? t("syncing_holidays") : t("add_holidays")}
+                  </p>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 truncate">
+                    {syncError ? t("holiday_sync_error") : t("holidays_in", { region: regionName })}
+                  </p>
+                </div>
+              </button>
+            )}
           </div>
         )}
       </div>
