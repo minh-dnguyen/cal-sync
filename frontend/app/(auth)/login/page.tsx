@@ -40,7 +40,7 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-app-bg dark:bg-gray-900 px-4">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
@@ -48,7 +48,7 @@ function LoginContent() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-500 text-white text-2xl font-bold mb-3">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#6366F1] text-white text-2xl font-bold mb-3">
             C
           </div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -61,7 +61,7 @@ function LoginContent() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-2xl p-8 space-y-5"
+          className="bg-app-surface dark:bg-gray-800 shadow-sm border border-app-border dark:border-gray-700 rounded-2xl p-8 space-y-5"
         >
           {error && (
             <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg px-4 py-3 text-sm">
@@ -79,7 +79,7 @@ function LoginContent() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@example.com"
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              className="w-full px-3 py-2.5 rounded-lg border border-app-border dark:border-gray-600 bg-app-input dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent text-sm"
             />
           </div>
 
@@ -93,7 +93,7 @@ function LoginContent() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              className="w-full px-3 py-2.5 rounded-lg border border-app-border dark:border-gray-600 bg-app-input dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent text-sm"
             />
           </div>
 
@@ -119,7 +119,7 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 dark:bg-gray-900" />}>
+    <Suspense fallback={<div className="min-h-screen bg-app-bg dark:bg-gray-900" />}>
       <LoginContent />
     </Suspense>
   );

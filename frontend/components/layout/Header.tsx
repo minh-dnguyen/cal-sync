@@ -38,7 +38,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const weekLabel   = t("week") + " " + weekNum;
 
   return (
-    <header className="relative z-50 h-14 flex items-center gap-2 px-3 border-b border-app-border bg-app-bg flex-shrink-0">
+    <header className="relative z-50 h-14 flex items-center gap-2 px-3 border-b border-app-border bg-app-surface flex-shrink-0">
       {/* ── Left cluster ───────────────────────────────────────── */}
 
       {isSettings ? (
@@ -64,9 +64,9 @@ export function Header({ onMenuToggle }: HeaderProps) {
       {/* Logo — click to go home */}
       <Link
         href="/calendar"
-        className="flex items-center gap-1.5 font-bold text-primary-600 dark:text-primary-400 text-base mr-1 flex-shrink-0 hover:opacity-80 transition-opacity"
+        className="flex items-center gap-1.5 font-bold text-[#1E293B] dark:text-primary-400 text-base mr-1 flex-shrink-0 hover:opacity-80 transition-opacity"
       >
-        <span className="w-7 h-7 rounded-lg bg-primary-500 text-white text-sm font-bold flex items-center justify-center">
+        <span className="w-7 h-7 rounded-lg bg-[#6366F1] text-white text-sm font-bold flex items-center justify-center">
           C
         </span>
         <span className="hidden md:inline">CalSync</span>
@@ -77,7 +77,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         <>
           <button
             onClick={goToday}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#C8750A] text-[#C8750A] dark:text-amber-400 dark:border-amber-500 hover:bg-[#C8750A] hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-colors flex-shrink-0"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border bg-[#EEF2FF] border-[#6366F1] text-[#4F46E5] hover:bg-[#E0E7FF] dark:bg-transparent dark:border-[#818CF8] dark:text-[#818CF8] dark:hover:bg-[#818CF8]/10 transition-colors flex-shrink-0"
           >
             {t("today")}
           </button>

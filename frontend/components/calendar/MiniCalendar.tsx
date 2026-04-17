@@ -113,7 +113,6 @@ export function MiniCalendar() {
           if (!date) return <div key={i} />;
 
           const isToday = isSameDay(date, today);
-          const isSelected = isSameDay(date, currentDate);
           const isCurrentMonth = date.getMonth() === viewMonth;
 
           return (
@@ -121,14 +120,12 @@ export function MiniCalendar() {
               key={i}
               onClick={() => handleDayClick(date)}
               className={`
-                flex items-center justify-center rounded-full text-[11px] w-6 h-6 mx-auto my-0.5 transition-colors
+                flex items-center justify-center rounded-full text-[11px] w-6 h-6 mx-auto my-0.5 transition-all duration-200
                 ${isToday
-                  ? "bg-[#C8750A] text-white font-bold"
-                  : isSelected && !isToday
-                  ? "bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-semibold"
+                  ? "bg-[#4F46E5] dark:bg-[#818CF8] text-white dark:text-[#0F172A] font-bold"
                   : isCurrentMonth
-                  ? "text-gray-700 dark:text-gray-200 hover:bg-app-surface"
-                  : "text-gray-300 dark:text-gray-600 hover:bg-app-surface"
+                  ? "text-gray-700 dark:text-gray-200 hover:bg-[#EEF2FF] hover:text-[#4F46E5] dark:hover:bg-[rgba(129,140,248,0.15)] dark:hover:text-[#C7D2FE]"
+                  : "text-gray-300 dark:text-gray-600 hover:bg-[#EEF2FF] hover:text-[#4F46E5] dark:hover:bg-[rgba(129,140,248,0.15)] dark:hover:text-[#C7D2FE]"
                 }
               `}
             >

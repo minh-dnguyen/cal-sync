@@ -7,10 +7,10 @@
 :root {
   --header-height: 3.5rem; /* matches h-14 = 56px */
 
-  --app-bg:      #A67B5B; /* page / chrome background  */
-  --app-surface: #AF886B; /* elevated surfaces (cards, modals, dropdowns) */
-  --app-input:   #B8957C; /* form inputs */
-  --app-border:  #956F52; /* borders */
+  --app-bg:      #F5F7FF; /* page / chrome background  */
+  --app-surface: #FFFFFF; /* elevated surfaces (sidebar, header, cards) */
+  --app-input:   #F8FAFF; /* form inputs */
+  --app-border:  #E2E8F0; /* borders */
 }
 
 .dark {
@@ -28,7 +28,7 @@
   --fc-button-hover-bg-color:     #4f46e5;
   --fc-button-hover-border-color: #4f46e5;
   --fc-button-active-bg-color:    #4338ca;
-  --fc-today-bg-color:            #FDF0E0;
+  --fc-today-bg-color:            #EEF2FF;
   --fc-event-border-color:        transparent;
   --fc-page-bg-color:             var(--app-bg);
   --fc-neutral-bg-color:          var(--app-surface);
@@ -39,7 +39,7 @@
   --fc-button-bg-color:           #6366f1;
   --fc-button-border-color:       #6366f1;
   --fc-button-hover-bg-color:     #4f46e5;
-  --fc-today-bg-color:            #4E5F9A;
+  --fc-today-bg-color:            rgba(129, 140, 248, 0.12);
   --fc-neutral-text-color:        #f3f4f6;
   /* fc-page-bg-color / fc-border-color / fc-neutral-bg-color / fc-list-event-hover-bg-color
      auto-update because they reference var(--app-*) defined above */
@@ -55,16 +55,40 @@
   color: #f3f4f6;
 }
 
-.fc-daygrid-day.fc-day-today .fc-daygrid-day-number,
+/* Base: all day numbers are circle-shaped with a smooth transition */
+.fc-daygrid-day-number {
+  border-radius: 50% !important;
+  width: 26px !important;
+  height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: background-color 0.2s, color 0.2s !important;
+}
+
+/* Hover — light mode */
+.fc-daygrid-day-number:hover {
+  background-color: #EEF2FF !important;
+  color: #4F46E5 !important;
+}
+
+/* Hover — dark mode */
+.dark .fc-daygrid-day-number:hover {
+  background-color: rgba(129, 140, 248, 0.15) !important;
+  color: #C7D2FE !important;
+}
+
+/* Today — light mode */
+.fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  background-color: #4F46E5 !important;
+  color: #ffffff !important;
+}
+
+/* Today — dark mode */
 .dark .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-  background-color: #C8750A;
-  color: #fff;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: #818CF8 !important;
+  color: #0F172A !important;
 }
 
 /* Event pill styles */

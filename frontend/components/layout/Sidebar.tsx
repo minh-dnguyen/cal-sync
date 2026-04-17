@@ -408,7 +408,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   return (
     <>
       {/* Desktop — toggled by the hamburger on all screen sizes */}
-      <aside className={`${open ? "flex" : "hidden"} flex-col w-64 flex-shrink-0 border-r border-app-border bg-app-bg`}>
+      <aside className={`${open ? "flex" : "hidden"} flex-col w-64 flex-shrink-0 border-r border-app-border bg-app-surface`}>
         {content}
       </aside>
 
@@ -421,7 +421,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black/40" onClick={onClose} />
           {/* Panel */}
-          <aside className="relative w-72 bg-app-bg flex flex-col shadow-xl overflow-hidden">
+          <aside className="relative w-72 bg-app-surface flex flex-col shadow-xl overflow-hidden">
             {content}
           </aside>
         </div>

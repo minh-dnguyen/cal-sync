@@ -265,7 +265,7 @@ export default function SettingsPage() {
   const keepColorsValue = keepColorsLocal ?? googleSource?.keep_source_colors ?? false;
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#4c2f1f] dark:bg-[#1e2b4a]">
+    <div className="flex-1 overflow-y-auto bg-app-bg dark:bg-[#1e2b4a]">
       <GoogleColorModal
         open={colorModalOpen}
         onClose={() => setColorModalOpen(false)}
@@ -311,7 +311,7 @@ export default function SettingsPage() {
             <select
               value={dateFormat}
               onChange={(e) => { setDateFormat(e.target.value as DateFormat); flashSaved(); }}
-              className="w-full px-3 py-2.5 rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2.5 rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
             >
               {DATE_FORMATS.map((f) => (
                 <option key={f.value} value={f.value}>
@@ -325,7 +325,7 @@ export default function SettingsPage() {
             <select
               value={timeFormat}
               onChange={(e) => { setTimeFormat(e.target.value as TimeFormat); flashSaved(); }}
-              className="w-full px-3 py-2.5 rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2.5 rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
             >
               {TIME_FORMATS.map((f) => (
                 <option key={f.value} value={f.value}>
