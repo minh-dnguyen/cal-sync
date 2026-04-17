@@ -56,3 +56,37 @@ export function useSyncHolidays() {
     },
   });
 }
+
+/** Initiate Google Calendar OAuth — fetches the Google authorization URL. */
+export function useGoogleInit() {
+  return useMutation({
+    mutationFn: () =>
+      api.get<{ auth_url: string }>("/api/v1/auth/google/init").then((r) => r.data.auth_url),
+  });
+}
+
+/** Sync events for a connected Google Calendar source. */
+export function useSyncGoogleCalendar() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (sourceId: string) =>
+      api.post(`/api/v1/calendar-sources/${sourceId}/sync`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["calendar-sources"] });
+      qc.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+}
+
+/** Disconnect (delete) a calendar source and revoke its OAuth token. */
+export function useDisconnectCalendarSource() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (sourceId: string) =>
+      api.delete(`/api/v1/calendar-sources/${sourceId}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["calendar-sources"] });
+      qc.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+}

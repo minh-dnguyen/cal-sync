@@ -4,6 +4,8 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import multiMonthPlugin from "@fullcalendar/multimonth";
+import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
 import "./timegrid.css";
@@ -102,7 +104,7 @@ export function CalendarView() {
       <div className="flex-1 overflow-auto p-3 pt-2">
         <FullCalendar
           ref={calRef}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin]}
+          plugins={[dayGridPlugin, timeGridPlugin, multiMonthPlugin, listPlugin, interactionPlugin, rrulePlugin]}
           initialView="dayGridMonth"
           /* We provide our own toolbar in the Header */
           headerToolbar={false}
@@ -116,6 +118,7 @@ export function CalendarView() {
           eventClick={handleEventClick}
           eventDisplay="block"
           dayMaxEvents={4}
+          multiMonthMaxColumns={4}
           nowIndicator
           weekends
           firstDay={1}

@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     # Phase 3 – Google Calendar
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
-    GOOGLE_REDIRECT_URI: str = "http://localhost:3000/api/auth/google/callback"
+    GOOGLE_REDIRECT_URI: str = "http://localhost:3000/auth/google/callback"
 
     # Phase 4 – Microsoft Outlook
     MICROSOFT_CLIENT_ID: str = ""

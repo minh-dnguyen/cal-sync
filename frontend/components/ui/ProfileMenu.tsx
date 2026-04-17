@@ -80,7 +80,7 @@ export function ProfileMenu() {
       {/* Trigger */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 rounded-lg pl-1 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="flex items-center gap-1.5 rounded-lg pl-1 pr-2 py-1 hover:bg-app-surface transition-colors"
         aria-expanded={open}
         aria-haspopup="true"
       >
@@ -95,10 +95,10 @@ export function ProfileMenu() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full mt-2 min-w-[16rem] w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 min-w-[16rem] w-64 bg-app-surface rounded-xl shadow-xl border border-app-border z-50 overflow-hidden">
 
           {/* ── Current account ─────────────────────────────────── */}
-          <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">
+          <div className="px-4 py-3 bg-app-bg border-b border-app-border">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">
               {t("signed_in_as")}
             </p>
@@ -119,7 +119,7 @@ export function ProfileMenu() {
 
           {/* ── Other saved accounts ─────────────────────────────── */}
           {otherAccounts.length > 0 && (
-            <div className="border-b border-gray-100 dark:border-gray-700">
+            <div className="border-b border-app-border">
               <p className="px-4 pt-2.5 pb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
                 {t("switch_account")}
               </p>
@@ -127,7 +127,7 @@ export function ProfileMenu() {
                 <button
                   key={account.email}
                   onClick={() => handleSwitchAccount(account)}
-                  className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors text-left"
+                  className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-app-bg transition-colors text-left"
                 >
                   <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-semibold flex items-center justify-center flex-shrink-0 select-none">
                     {getInitials(account.full_name, account.email)}
@@ -146,10 +146,10 @@ export function ProfileMenu() {
           )}
 
           {/* ── Add another account ──────────────────────────────── */}
-          <div className="border-b border-gray-100 dark:border-gray-700">
+          <div className="border-b border-app-border">
             <button
               onClick={handleAddAccount}
-              className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors"
+              className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-app-bg transition-colors"
             >
               <UserPlus size={15} className="text-gray-400 dark:text-gray-500 flex-shrink-0" />
               {t("add_account")}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import api from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-export default function LoginPage() {
+function LoginContent() {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -114,5 +114,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 dark:bg-gray-900" />}>
+      <LoginContent />
+    </Suspense>
   );
 }

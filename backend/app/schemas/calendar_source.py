@@ -11,6 +11,8 @@ class CalendarSourceResponse(BaseModel):
     is_visible: bool
     color: str
     created_at: datetime
+    connected_email: str | None = None
+    keep_source_colors: bool = False
 
     model_config = {"from_attributes": True}
 
@@ -19,12 +21,20 @@ class UpdateCalendarSourceRequest(BaseModel):
     name: str | None = None
     is_visible: bool | None = None
     color: str | None = None
+    keep_source_colors: bool | None = None
 
 
 class SyncHolidaysRequest(BaseModel):
-    """Body for POST /calendar-sources/holidays/sync.
-
-    country_code: ISO 3166-1 alpha-2 code (e.g. "US", "VN").
-    Falls back to the authenticated user's stored country_code when omitted.
-    """
+    """Body for POST /calendar-sources/holidays/sync."""
     country_code: str | None = None
+
+
+class GoogleExchangeRequest(BaseModel):
+    """Body for POST /auth/google/exchange."""
+    code: str
+    keep_source_colors: bool = False
+
+
+class GoogleSyncResponse(BaseModel):
+    synced: int
+    source: CalendarSourceResponse

@@ -12,6 +12,8 @@
     "@fullcalendar/core": "^6.1.14",
     "@fullcalendar/daygrid": "^6.1.14",
     "@fullcalendar/interaction": "^6.1.14",
+    "@fullcalendar/list": "^6.1.20",
+    "@fullcalendar/multimonth": "^6.1.20",
     "@fullcalendar/react": "^6.1.14",
     "@fullcalendar/rrule": "^6.1.14",
     "@fullcalendar/timegrid": "^6.1.14",

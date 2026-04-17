@@ -1,11 +1,15 @@
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.auth import RegisterRequest, LoginRequest, TokenResponse
 from app.schemas.user import UserResponse
+from app.schemas.calendar_source import CalendarSourceResponse, GoogleExchangeRequest
 from app.models.user import User
 from app.models.calendar_source import CalendarSource, SourceType
 from app.core.security import hash_password, verify_password, create_access_token
+from app.core.deps import get_current_user
+from app.services import google_calendar_service as gcs
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -48,3 +52,79 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
 
     token = create_access_token(str(user.id))
     return TokenResponse(access_token=token)
+
+
+# ── Phase 3: Google Calendar OAuth ───────────────────────────────────────────
+
+@router.get("/google/init")
+def google_init(current_user: User = Depends(get_current_user)):
+    """Return the Google OAuth2 authorization URL for the frontend to redirect to."""
+    auth_url = gcs.build_auth_url()
+    return {"auth_url": auth_url}
+
+
+@router.post("/google/exchange", response_model=CalendarSourceResponse, status_code=status.HTTP_200_OK)
+async def google_exchange(
+    body: GoogleExchangeRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Exchange a Google OAuth2 authorization code for tokens.
+
+    Creates a new Google CalendarSource (or updates an existing one) and
+    immediately syncs the user's primary Google Calendar events.
+    """
+    # Exchange the auth code for tokens
+    try:
+        token_data = await gcs.exchange_code(body.code)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Failed to exchange Google authorization code")
+
+    access_token = token_data.get("access_token")
+    refresh_token = token_data.get("refresh_token")
+    expires_in = token_data.get("expires_in", 3600)
+
+    if not access_token:
+        raise HTTPException(status_code=400, detail="No access token received from Google")
+
+    # Fetch the Google account email to label the source
+    connected_email = await gcs.get_user_email(access_token)
+    source_name = f"Google Calendar ({connected_email})" if connected_email else "Google Calendar"
+
+    # Get or create the Google CalendarSource for this user
+    google_source = (
+        db.query(CalendarSource)
+        .filter(
+            CalendarSource.user_id == current_user.id,
+            CalendarSource.source_type == SourceType.google,
+        )
+        .first()
+    )
+
+    if google_source:
+        google_source.access_token = access_token
+        if refresh_token:
+            google_source.refresh_token = refresh_token
+        google_source.token_expires_at = gcs.token_expiry(expires_in)
+        google_source.connected_email = connected_email
+        google_source.name = source_name
+        google_source.is_visible = True
+        google_source.keep_source_colors = body.keep_source_colors
+    else:
+        google_source = CalendarSource(
+            user_id=current_user.id,
+            name=source_name,
+            source_type=SourceType.google,
+            color="#4285F4",
+            is_visible=True,
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_expires_at=gcs.token_expiry(expires_in),
+            connected_email=connected_email,
+            keep_source_colors=body.keep_source_colors,
+        )
+        db.add(google_source)
+
+    db.commit()
+    db.refresh(google_source)
+    return google_source

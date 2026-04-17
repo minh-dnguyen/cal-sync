@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ProfileMenu } from "@/components/ui/ProfileMenu";
+import { ViewSwitcherMenu } from "@/components/ui/ViewSwitcherMenu";
 import { useCalendar } from "@/contexts/CalendarContext";
 
 interface HeaderProps {
@@ -25,29 +26,26 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const { t, i18n } = useTranslation();
   const pathname = usePathname();
   const router   = useRouter();
-  const { goToday, goPrev, goNext, changeView, view, currentDate } = useCalendar();
+  const { goToday, goPrev, goNext, view, currentDate } = useCalendar();
 
-  const isSettings = pathname === "/settings";
-
-  const VIEW_OPTIONS = [
-    { key: "dayGridMonth", label: t("month") },
-    { key: "timeGridWeek", label: t("week") },
-    { key: "timeGridDay",  label: t("day") },
-  ];
-
-  const weekNum   = getISOWeek(currentDate);
-  const dateLabel = currentDate.toLocaleString(i18n.language, { month: "long", year: "numeric" });
-  const weekLabel = t("week") + " " + weekNum;
+  const isSettings  = pathname === "/settings";
+  const isYearView  = view === "multiMonthYear";
+  const isListView  = view === "listYear";
+  const weekNum     = getISOWeek(currentDate);
+  const dateLabel   = isYearView || isListView
+    ? String(currentDate.getFullYear())
+    : currentDate.toLocaleString(i18n.language, { month: "long", year: "numeric" });
+  const weekLabel   = t("week") + " " + weekNum;
 
   return (
-    <header className="relative z-50 h-14 flex items-center gap-2 px-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
+    <header className="relative z-50 h-14 flex items-center gap-2 px-3 border-b border-app-border bg-app-bg flex-shrink-0">
       {/* ── Left cluster ───────────────────────────────────────── */}
 
       {isSettings ? (
         /* Settings page — back arrow replaces the hamburger */
         <button
           onClick={() => router.push("/calendar")}
-          className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+          className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-app-surface transition-colors flex-shrink-0"
           aria-label="Back to calendar"
         >
           <ArrowLeft size={20} />
@@ -56,7 +54,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         /* All other pages — hamburger toggles the sidebar */
         <button
           onClick={onMenuToggle}
-          className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+          className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-app-surface transition-colors flex-shrink-0"
           aria-label="Toggle sidebar"
         >
           <Menu size={20} />
@@ -79,7 +77,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         <>
           <button
             onClick={goToday}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#C8750A] text-[#C8750A] dark:text-amber-400 dark:border-amber-500 hover:bg-[#C8750A] hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-colors flex-shrink-0"
           >
             {t("today")}
           </button>
@@ -87,14 +85,14 @@ export function Header({ onMenuToggle }: HeaderProps) {
           <div className="flex items-center gap-0.5">
             <button
               onClick={goPrev}
-              className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-app-surface transition-colors"
               aria-label="Previous"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={goNext}
-              className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-app-surface transition-colors"
               aria-label="Next"
             >
               <ChevronRight size={18} />
@@ -105,9 +103,11 @@ export function Header({ onMenuToggle }: HeaderProps) {
             <span className="text-sm font-semibold text-gray-800 dark:text-gray-100 whitespace-nowrap truncate">
               {dateLabel}
             </span>
-            <span className="hidden sm:inline text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
-              {weekLabel}
-            </span>
+            {!isYearView && (
+              <span className="hidden sm:inline text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                {weekLabel}
+              </span>
+            )}
           </div>
         </>
       )}
@@ -117,26 +117,9 @@ export function Header({ onMenuToggle }: HeaderProps) {
       {/* ── Right cluster ──────────────────────────────────────── */}
 
       {/* View switcher — hidden on the settings page */}
-      {!isSettings && (
-        <div className="hidden sm:flex items-center rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden flex-shrink-0">
-          {VIEW_OPTIONS.map((opt, idx) => (
-            <button
-              key={opt.key}
-              onClick={() => changeView(opt.key)}
-              className={`px-3 py-1.5 text-xs font-medium transition-colors
-                ${idx > 0 ? "border-l border-gray-200 dark:border-gray-700" : ""}
-                ${view === opt.key
-                  ? "bg-primary-500 text-white"
-                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {!isSettings && <ViewSwitcherMenu />}
 
-      <ThemeToggle variant="compact" />
+      <ThemeToggle variant="toggle" />
       <ProfileMenu />
     </header>
   );

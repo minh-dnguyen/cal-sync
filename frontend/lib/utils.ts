@@ -68,13 +68,20 @@ export interface ParsedRrule {
 
 /** Parse an RFC 5545 RRULE string back to form values (best-effort for display) */
 export function parseRrule(rrule: string | null): ParsedRrule {
-  if (!rrule) return { freq: "none", interval: 1, byDay: [], until: "", byMonthDay: null };
+  if (!rrule)
+    return {
+      freq: "none",
+      interval: 1,
+      byDay: [],
+      until: "",
+      byMonthDay: null,
+    };
 
   const parts = Object.fromEntries(
     rrule.split(";").map((p) => {
       const [k, v] = p.split("=");
       return [k, v];
-    })
+    }),
   );
 
   // Convert "20240101T000000Z" → "2024-01-01"

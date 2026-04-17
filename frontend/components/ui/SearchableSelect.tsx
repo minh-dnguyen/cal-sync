@@ -75,7 +75,7 @@ export function SearchableSelect({
         onClick={handleToggle}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm hover:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+        className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white text-sm hover:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
       >
         {/* Truncate selected label so it never wraps */}
         <span className={`truncate ${selected ? "" : "text-gray-400 dark:text-gray-500"}`}>
@@ -96,11 +96,11 @@ export function SearchableSelect({
       {open && (
         <div
           role="listbox"
-          className="absolute left-0 w-full z-[9999] mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden"
+          className="absolute left-0 w-full z-[9999] mt-1 bg-app-surface border border-app-border rounded-xl shadow-xl overflow-hidden"
           style={{ top: "calc(100% + 4px)" }}
         >
           {/* Search row */}
-          <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 px-3 py-2 border-b border-app-border">
             <Search size={13} className="text-gray-400 flex-shrink-0" />
             <input
               ref={inputRef}

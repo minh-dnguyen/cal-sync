@@ -83,7 +83,7 @@ export function MiniCalendar() {
       <div className="flex items-center justify-between mb-2">
         <button
           onClick={prevMonth}
-          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+          className="p-1 rounded hover:bg-app-surface text-gray-500 dark:text-gray-400 transition-colors"
         >
           <ChevronLeft size={14} />
         </button>
@@ -92,7 +92,7 @@ export function MiniCalendar() {
         </span>
         <button
           onClick={nextMonth}
-          className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+          className="p-1 rounded hover:bg-app-surface text-gray-500 dark:text-gray-400 transition-colors"
         >
           <ChevronRight size={14} />
         </button>
@@ -123,12 +123,12 @@ export function MiniCalendar() {
               className={`
                 flex items-center justify-center rounded-full text-[11px] w-6 h-6 mx-auto my-0.5 transition-colors
                 ${isToday
-                  ? "bg-primary-500 text-white font-bold"
+                  ? "bg-[#C8750A] text-white font-bold"
                   : isSelected && !isToday
                   ? "bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-semibold"
                   : isCurrentMonth
-                  ? "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  : "text-gray-300 dark:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                  ? "text-gray-700 dark:text-gray-200 hover:bg-app-surface"
+                  : "text-gray-300 dark:text-gray-600 hover:bg-app-surface"
                 }
               `}
             >

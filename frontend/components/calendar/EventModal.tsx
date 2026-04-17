@@ -184,7 +184,7 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
   }
 
   const inputClass =
-    "w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent";
+    "w-full px-3 py-2 rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent";
 
   const labelClass = "block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1";
 
@@ -205,7 +205,7 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
           onChange={(e) => setTitle(e.target.value)}
           required
           placeholder={t("event_title")}
-          className="w-full px-3 py-2.5 text-base font-medium rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          className="w-full px-3 py-2.5 text-base font-medium rounded-lg border border-app-border bg-app-input text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         />
 
         {/* All-day toggle */}
@@ -319,7 +319,7 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
               )}
 
               {freq === "monthly" && (
-                <div className="flex rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 text-xs">
+                <div className="flex rounded-lg overflow-hidden border border-app-border text-xs">
                   <button
                     type="button"
                     onClick={() => {
@@ -329,7 +329,7 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
                     className={`flex-1 py-1.5 font-medium transition-colors ${
                       monthlyMode === "day"
                         ? "bg-primary-500 text-white"
-                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                        : "bg-app-input text-gray-600 dark:text-gray-300"
                     }`}
                   >
                     {t("on_day_of_month", { day: byMonthDay ?? new Date(startInput).getDate() })}
@@ -337,10 +337,10 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
                   <button
                     type="button"
                     onClick={() => { setMonthlyMode("week"); setByMonthDay(null); }}
-                    className={`flex-1 py-1.5 font-medium transition-colors border-l border-gray-200 dark:border-gray-600 ${
+                    className={`flex-1 py-1.5 font-medium transition-colors border-l border-app-border ${
                       monthlyMode === "week"
                         ? "bg-primary-500 text-white"
-                        : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                        : "bg-app-input text-gray-600 dark:text-gray-300"
                     }`}
                   >
                     {t("weekly")}

@@ -19,6 +19,8 @@ export interface CalendarSource {
   is_visible: boolean;
   color: string;
   created_at: string;
+  connected_email: string | null;
+  keep_source_colors: boolean;
 }
 
 export interface CalEvent {

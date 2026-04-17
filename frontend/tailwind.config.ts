@@ -10,6 +10,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        /* Theme surface tokens — values live in globals.css CSS vars */
+        "app-bg":      "var(--app-bg)",
+        "app-surface": "var(--app-surface)",
+        "app-input":   "var(--app-input)",
+        "app-border":  "var(--app-border)",
         primary: {
           50:  "#eef2ff",
           100: "#e0e7ff",

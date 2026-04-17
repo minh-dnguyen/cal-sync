@@ -27,6 +27,8 @@ class CalendarSource(Base):
     access_token = Column(Text, nullable=True)
     refresh_token = Column(Text, nullable=True)
     token_expires_at = Column(DateTime, nullable=True)
+    connected_email = Column(String, nullable=True)  # Google/Outlook account email
+    keep_source_colors = Column(Boolean, default=False)  # Preserve original event colors from provider
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
