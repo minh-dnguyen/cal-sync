@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Trash2, Bell, RefreshCw, Palette, AlignLeft } from "lucide-react";
+import { Trash2, Bell, RefreshCw, Palette, AlignLeft, Tag } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { useCreateEvent, useUpdateEvent, useDeleteEvent } from "@/hooks/useEvents";
 import { buildRrule, parseRrule, isoToLocalInput, ParsedRrule } from "@/lib/utils";
@@ -120,11 +120,38 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
     } else {
       // New event defaults
       const now = new Date();
-      const start = defaultStart ?? new Date(now.setMinutes(0, 0, 0)).toISOString();
-      const end = defaultEnd ?? new Date(new Date(start).getTime() + 60 * 60 * 1000).toISOString();
+      const ms = 30 * 60 * 1000;
+      const roundedNow = new Date(Math.ceil(now.getTime() / ms) * ms);
+
+      // Always use current time rounded up to nearest 30 min, but preserve
+      // the DATE from whatever slot/cell was clicked (or today if none).
+      let startIso: string;
+      if (!defaultStart) {
+        startIso = roundedNow.toISOString();
+      } else {
+        // Extract the local date from the hint (handles both date-only strings
+        // like "2026-04-20" and full ISO strings like "2026-04-20T09:00:00+07:00").
+        // Avoid UTC-midnight shift for date-only strings by parsing the components.
+        let y: number, m: number, d: number;
+        if (!defaultStart.includes("T")) {
+          [y, m, d] = defaultStart.split("-").map(Number);
+        } else {
+          const parsed = new Date(defaultStart);
+          y = parsed.getFullYear(); m = parsed.getMonth() + 1; d = parsed.getDate();
+        }
+        const local = new Date(roundedNow);
+        local.setFullYear(y, m - 1, d);
+        startIso = local.toISOString();
+      }
+
+      const startDate = new Date(startIso);
+      const midnight = new Date(startDate);
+      midnight.setHours(24, 0, 0, 0);
+      const endRaw = new Date(startDate.getTime() + 30 * 60 * 1000);
+      const end = (endRaw > midnight ? midnight : endRaw).toISOString();
       setTitle("");
       setDescription("");
-      setStartInput(isoToLocalInput(start));
+      setStartInput(isoToLocalInput(startIso));
       setEndInput(isoToLocalInput(end));
       setAllDay(false);
       setColor(EVENT_COLORS[0]);
@@ -258,6 +285,26 @@ export function EventModal({ open, onClose, event, defaultStart, defaultEnd }: P
             className={`${inputClass} resize-none`}
           />
         </div>
+
+        {/* Outlook categories (read-only) */}
+        {isEditing && event?.source === "outlook" && event.outlook_categories && event.outlook_categories.length > 0 && (
+          <div>
+            <label className={labelClass}>
+              <span className="flex items-center gap-1.5"><Tag size={12} /> Outlook Categories</span>
+            </label>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {event.outlook_categories.map((cat) => (
+                <span
+                  key={cat}
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                  style={event.color ? { backgroundColor: `${event.color}22`, color: event.color, border: `1px solid ${event.color}44` } : undefined}
+                >
+                  {cat}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Recurrence */}
         <div>

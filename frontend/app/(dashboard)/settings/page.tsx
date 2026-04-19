@@ -8,10 +8,11 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { useSettingsStore, DateFormat, TimeFormat } from "@/store/settingsStore";
 import { COUNTRIES as REGIONS } from "@/lib/geoData";
-import { useGoogleInit, useSyncGoogleCalendar, useDisconnectCalendarSource } from "@/hooks/useEvents";
+import { useGoogleInit, useSyncGoogleCalendar, useOutlookInit, useSyncOutlookCalendar, useDisconnectCalendarSource } from "@/hooks/useEvents";
 import api from "@/lib/api";
 import { CalendarSource } from "@/types";
 import { GoogleColorModal } from "@/components/calendar/GoogleColorModal";
+import { OutlookColorModal } from "@/components/calendar/OutlookColorModal";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -170,11 +171,16 @@ export default function SettingsPage() {
   const [googleError, setGoogleError] = useState("");
   const [syncMsg, setSyncMsg] = useState("");
   const [colorModalOpen, setColorModalOpen] = useState(false);
-  // Optimistic local state for the keep-colors toggle
   const [keepColorsLocal, setKeepColorsLocal] = useState<boolean | null>(null);
+  const [outlookError, setOutlookError] = useState("");
+  const [outlookSyncMsg, setOutlookSyncMsg] = useState("");
+  const [outlookColorModalOpen, setOutlookColorModalOpen] = useState(false);
+  const [keepOutlookColorsLocal, setKeepOutlookColorsLocal] = useState<boolean | null>(null);
 
   const googleInit = useGoogleInit();
   const syncGoogle = useSyncGoogleCalendar();
+  const outlookInit = useOutlookInit();
+  const syncOutlook = useSyncOutlookCalendar();
   const disconnectSource = useDisconnectCalendarSource();
 
   const updateSource = useMutation({
@@ -192,7 +198,8 @@ export default function SettingsPage() {
     queryFn: () => api.get("/api/v1/calendar-sources").then((r) => r.data),
   });
 
-  const googleSource = sources.find((s) => s.source_type === "google");
+  const googleSource  = sources.find((s) => s.source_type === "google");
+  const outlookSource = sources.find((s) => s.source_type === "outlook");
 
   // After OAuth redirect, show the color dialog automatically
   useEffect(() => {
@@ -200,6 +207,11 @@ export default function SettingsPage() {
     if (justConnected) {
       localStorage.removeItem("calsync-google-just-connected");
       setColorModalOpen(true);
+    }
+    const outlookJustConnected = localStorage.getItem("calsync-outlook-just-connected") === "true";
+    if (outlookJustConnected) {
+      localStorage.removeItem("calsync-outlook-just-connected");
+      setOutlookColorModalOpen(true);
     }
   }, []);
 
@@ -262,7 +274,56 @@ export default function SettingsPage() {
     });
   }
 
+  function handleOutlookColorChoice(keepColors: boolean) {
+    setOutlookColorModalOpen(false);
+    if (!outlookSource) return;
+    setKeepOutlookColorsLocal(keepColors);
+    updateSource.mutate(
+      { id: outlookSource.id, keep_source_colors: keepColors },
+      {
+        onSuccess: () => {
+          syncOutlook.mutate(outlookSource.id, {
+            onSuccess: (data) => {
+              setOutlookSyncMsg(`Synced ${data.synced} new event${data.synced !== 1 ? "s" : ""}.`);
+              setTimeout(() => setOutlookSyncMsg(""), 5000);
+            },
+            onError: () => setOutlookError(t("outlook_sync_error")),
+          });
+        },
+      }
+    );
+  }
+
+  function handleConnectOutlook() {
+    setOutlookError("");
+    outlookInit.mutate(undefined, {
+      onSuccess: (authUrl) => { window.location.href = authUrl; },
+      onError: () => setOutlookError(t("outlook_connect_error")),
+    });
+  }
+
+  function handleSyncOutlook(sourceId: string) {
+    setOutlookSyncMsg("");
+    setOutlookError("");
+    syncOutlook.mutate(sourceId, {
+      onSuccess: (data) => {
+        setOutlookSyncMsg(`Synced ${data.synced} new event${data.synced !== 1 ? "s" : ""}.`);
+        setTimeout(() => setOutlookSyncMsg(""), 4000);
+      },
+      onError: () => setOutlookError(t("outlook_sync_error")),
+    });
+  }
+
+  function handleDisconnectOutlook(sourceId: string) {
+    if (!window.confirm(t("disconnect_outlook_confirm"))) return;
+    setOutlookError("");
+    disconnectSource.mutate(sourceId, {
+      onError: () => setOutlookError("Failed to disconnect. Try again."),
+    });
+  }
+
   const keepColorsValue = keepColorsLocal ?? googleSource?.keep_source_colors ?? false;
+  const keepOutlookColorsValue = keepOutlookColorsLocal ?? outlookSource?.keep_source_colors ?? false;
 
   return (
     <div className="flex-1 overflow-y-auto bg-app-bg dark:bg-[#1e2b4a]">
@@ -270,6 +331,11 @@ export default function SettingsPage() {
         open={colorModalOpen}
         onClose={() => setColorModalOpen(false)}
         onConfirm={handleColorChoice}
+      />
+      <OutlookColorModal
+        open={outlookColorModalOpen}
+        onClose={() => setOutlookColorModalOpen(false)}
+        onConfirm={handleOutlookColorChoice}
       />
       <div className="max-w-2xl mx-auto py-8 px-4 space-y-5">
 
@@ -382,6 +448,17 @@ export default function SettingsPage() {
             </p>
           )}
 
+          {outlookError && (
+            <p className="text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2 mb-2">
+              {outlookError}
+            </p>
+          )}
+          {outlookSyncMsg && (
+            <p className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2 mb-2">
+              {outlookSyncMsg}
+            </p>
+          )}
+
           <FieldRow label="Google Calendar">
             {googleSource ? (
               <div className="flex flex-col gap-2">
@@ -454,6 +531,81 @@ export default function SettingsPage() {
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
                 {googleInit.isPending ? t("connecting_google") : t("connect_google")}
+              </button>
+            )}
+          </FieldRow>
+
+          <FieldRow label="Outlook Calendar">
+            {outlookSource ? (
+              <div className="flex flex-col gap-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {outlookSource.connected_email
+                    ? t("outlook_connected_as", { email: outlookSource.connected_email })
+                    : t("outlook_connected")}
+                </p>
+
+                {/* Keep Outlook colors toggle */}
+                <label className="flex items-center gap-2.5 cursor-pointer w-fit">
+                  <Toggle
+                    checked={keepOutlookColorsValue}
+                    onChange={(v) => {
+                      setKeepOutlookColorsLocal(v);
+                      updateSource.mutate(
+                        { id: outlookSource.id, keep_source_colors: v },
+                        {
+                          onSuccess: () => {
+                            syncOutlook.mutate(outlookSource.id, {
+                              onSuccess: (data) => {
+                                setOutlookSyncMsg(`Colors updated — ${data.synced} new event${data.synced !== 1 ? "s" : ""} synced.`);
+                                setTimeout(() => setOutlookSyncMsg(""), 4000);
+                              },
+                            });
+                          },
+                        }
+                      );
+                    }}
+                  />
+                  <span className="text-xs text-gray-600 dark:text-gray-300">
+                    {t("keep_outlook_colors")}
+                  </span>
+                </label>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    disabled={syncOutlook.isPending}
+                    onClick={() => handleSyncOutlook(outlookSource.id)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-app-border bg-app-input text-gray-700 dark:text-gray-200 hover:bg-app-surface transition-colors disabled:opacity-60 disabled:cursor-wait"
+                  >
+                    <RefreshCw size={12} className={syncOutlook.isPending ? "animate-spin" : ""} />
+                    {syncOutlook.isPending ? t("syncing_outlook") : t("sync_now")}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={disconnectSource.isPending}
+                    onClick={() => handleDisconnectOutlook(outlookSource.id)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-red-300 dark:border-red-700 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-60 disabled:cursor-wait"
+                  >
+                    <Unlink size={12} />
+                    {disconnectSource.isPending ? t("disconnecting") : t("disconnect")}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                disabled={outlookInit.isPending}
+                onClick={handleConnectOutlook}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-app-input border border-app-border text-gray-700 dark:text-gray-200 hover:bg-app-surface transition-colors disabled:opacity-60 disabled:cursor-wait shadow-sm"
+              >
+                {/* Microsoft icon */}
+                <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0" fill="none">
+                  <rect x="1"  y="1"  width="10" height="10" fill="#F25022" />
+                  <rect x="13" y="1"  width="10" height="10" fill="#7FBA00" />
+                  <rect x="1"  y="13" width="10" height="10" fill="#00A4EF" />
+                  <rect x="13" y="13" width="10" height="10" fill="#FFB900" />
+                </svg>
+                {outlookInit.isPending ? t("connecting_outlook") : t("connect_outlook")}
               </button>
             )}
           </FieldRow>

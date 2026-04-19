@@ -13,21 +13,16 @@
 
 .fc-timegrid .fc-scrollgrid td,
 .fc-timegrid .fc-scrollgrid th {
-  border-color: #e5e7eb;
+  border-color: #e2e8f4;
 }
 
 .dark .fc-timegrid .fc-scrollgrid td,
 .dark .fc-timegrid .fc-scrollgrid th {
-  border-color: #374151;
+  border-color: #1a2535;
 }
 
 /* ─── 2. Sticky day/date column headers ────────────────────────────────────── */
 
-/*
- * FullCalendar v6 renders the col-header inside a sticky scrollgrid section.
- * Reinforce position:sticky and z-index so the row stays pinned when the
- * time-slot body scrolls.
- */
 .fc-timegrid .fc-col-header {
   position: sticky;
   top: 0;
@@ -41,14 +36,13 @@
 
 .fc-timegrid .fc-col-header-cell {
   padding: 6px 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e2e8f4;
 }
 
 .dark .fc-timegrid .fc-col-header-cell {
-  border-bottom-color: #374151;
+  border-bottom-color: #1a2535;
 }
 
-/* Day-name text (e.g. "Mon") */
 .fc-timegrid .fc-col-header-cell .fc-col-header-cell-cushion {
   display: inline-flex;
   flex-direction: column;
@@ -56,7 +50,7 @@
   gap: 1px;
   padding: 4px 8px;
   text-decoration: none;
-  color: #6b7280;
+  color: #64748b;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -64,10 +58,9 @@
 }
 
 .dark .fc-timegrid .fc-col-header-cell .fc-col-header-cell-cushion {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
-/* Today column header highlight */
 .fc-timegrid .fc-day-today .fc-col-header-cell-cushion {
   color: #6366f1;
 }
@@ -79,67 +72,131 @@
 /* ─── 3. All-day row ────────────────────────────────────────────────────────── */
 
 .fc-timegrid .fc-daygrid-body {
-  background: #fafafa;
-  border-bottom: 2px solid #e5e7eb;
+  background: #fafbff;
+  border-bottom: 2px solid #e2e8f4;
 }
 
 .dark .fc-timegrid .fc-daygrid-body {
-  background: #1f2937;
-  border-bottom-color: #374151;
+  background: #1a2232;
+  border-bottom-color: #1a2535;
 }
 
-/* "all-day" label on the left */
+/* "all-day" label */
 .fc-timegrid .fc-timegrid-axis-cushion {
-  color: #9ca3af;
-  font-size: 0.65rem;
-  font-weight: 500;
+  color: #94a3b8;
+  font-size: 0.62rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding-right: 8px;
+  letter-spacing: 0.06em;
+  padding-right: 10px;
+  text-align: right;
+  display: block;
 }
 
-/* ─── 4. Hour / slot dividers — subtle light grey ───────────────────────────── */
+/* ─── 4. TIME GUTTER / TIME AXIS ────────────────────────────────────────────── */
 
+/*
+ * Gutter cells — the left column that shows hour labels.
+ * Recessed background + vertical separator + tick marks create a clear
+ * visual boundary between the axis and the event area.
+ */
+.fc-timegrid .fc-timegrid-slot-label,
+.fc-timegrid .fc-timegrid-axis {
+  background: #f1f5fb;
+  /* Vertical separator line between gutter and event columns */
+  border-right: 1.5px solid #cdd5e4 !important;
+  position: relative;
+}
+
+.dark .fc-timegrid .fc-timegrid-slot-label,
+.dark .fc-timegrid .fc-timegrid-axis {
+  background: #0c1322;
+  border-right-color: #1c2a3e !important;
+}
+
+/*
+ * Tick mark — a short horizontal dash that bridges gutter separator and
+ * the hour grid line, reinforcing the "ruler" feel.
+ */
+.fc-timegrid .fc-timegrid-slot-label::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: -0.5px;
+  width: 5px;
+  height: 1.5px;
+  background: #cdd5e4;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.dark .fc-timegrid .fc-timegrid-slot-label::after {
+  background: #1c2a3e;
+}
+
+/* Minor (half-hour) slots have no tick */
+.fc-timegrid .fc-timegrid-slot-minor.fc-timegrid-slot-label::after {
+  display: none;
+}
+
+/*
+ * Time label text.
+ * negative margin-top floats the label UP so it sits right on the
+ * hour grid line rather than below it — matching Google Calendar's style.
+ */
+.fc-timegrid .fc-timegrid-slot-label-cushion,
+.dark .fc-timegrid .fc-timegrid-slot-label-cushion {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: right;
+  padding-right: 12px;
+  display: block;
+  margin-top: -0.48em;
+  white-space: nowrap;
+  color: #8da0b8;
+}
+
+.dark .fc-timegrid .fc-timegrid-slot-label-cushion {
+  color: #3a5068;
+}
+
+/* ─── 5. SLOT GRID LINES ────────────────────────────────────────────────────── */
+
+/* Every slot cell */
 .fc-timegrid .fc-timegrid-slot {
-  height: 3rem;              /* 48 px per half-hour = 96 px per hour */
-  border-top: 1px solid #f3f4f6;
+  height: 3rem;    /* 48 px / half-hour = 96 px / hour */
 }
 
-.dark .fc-timegrid .fc-timegrid-slot {
-  border-top-color: #1f2937;
+/* Hour slots — solid, clearly visible */
+.fc-timegrid .fc-timegrid-slot:not(.fc-timegrid-slot-minor) {
+  border-top: 1px solid #dde5f2;
 }
 
-/* Full-hour lines are slightly more visible */
-.fc-timegrid .fc-timegrid-slot-label {
-  border-top: 1px solid #e5e7eb;
-  vertical-align: top;
+.dark .fc-timegrid .fc-timegrid-slot:not(.fc-timegrid-slot-minor) {
+  border-top-color: #1a2535;
 }
 
-.dark .fc-timegrid .fc-timegrid-slot-label {
-  border-top-color: #374151;
+/* Hour line on the gutter side — slightly stronger than content */
+.fc-timegrid .fc-timegrid-slot-label:not(.fc-timegrid-slot-minor) {
+  border-top: 1px solid #c8d2e4;
 }
 
-/* Minor (half-hour) slot lines — dashed and even lighter */
+.dark .fc-timegrid .fc-timegrid-slot-label:not(.fc-timegrid-slot-minor) {
+  border-top-color: #1a2535;
+}
+
+/* Half-hour (minor) lines — extremely subtle dotted rule */
 .fc-timegrid .fc-timegrid-slot-minor {
-  border-top-style: dashed;
-  border-top-color: #f9fafb;
+  border-top: 1px dotted #ecf0f8;
 }
 
 .dark .fc-timegrid .fc-timegrid-slot-minor {
-  border-top-color: #111827;
+  border-top-color: #111c2a;
 }
 
-/* Time labels */
-.fc-timegrid .fc-timegrid-slot-label-cushion {
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #9ca3af;
-  letter-spacing: 0.03em;
-  padding: 0 8px;
-  white-space: nowrap;
-}
+/* ─── 6. Column backgrounds ─────────────────────────────────────────────────── */
 
-/* Column background */
 .fc-timegrid .fc-timegrid-col {
   background: #ffffff;
 }
@@ -148,16 +205,16 @@
   background: #111827;
 }
 
-/* Today column tint */
+/* Today column — subtle violet tint */
 .fc-timegrid .fc-day-today.fc-timegrid-col {
-  background: #f5f3ff !important;   /* very light violet */
+  background: #f5f3ff !important;
 }
 
 .dark .fc-timegrid .fc-day-today.fc-timegrid-col {
-  background: #1e1b4b1a !important;
+  background: rgba(30, 27, 75, 0.12) !important;
 }
 
-/* ─── 5. Current-time indicator — red line + circle dot ────────────────────── */
+/* ─── 7. NOW INDICATOR — pulsing dot + sharp line ───────────────────────────── */
 
 .fc-timegrid-now-indicator-line {
   border-color: #ef4444 !important;
@@ -166,24 +223,33 @@
 }
 
 /*
- * FullCalendar renders the "arrow" as a pure-CSS border triangle.
- * We override it to a filled circle that sits on top of the line.
+ * Replace FullCalendar's CSS triangle arrow with a filled circle.
+ * A keyframe pulse adds a subtle halo so the indicator reads clearly
+ * at a glance.
  */
 .fc-timegrid-now-indicator-arrow {
-  /* Reset the triangle */
   border: none !important;
   width: 10px !important;
   height: 10px !important;
   border-radius: 50% !important;
   background-color: #ef4444 !important;
-  /* Centre the dot on the indicator line (line is 2 px tall) */
   margin-top: -4px !important;
   margin-left: -5px !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18) !important;
+  animation: now-pulse 2.4s ease-in-out infinite;
 }
 
-/* ─── 6. Event blocks ───────────────────────────────────────────────────────── */
+@keyframes now-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.08), 0 0 10px rgba(239, 68, 68, 0.2);
+  }
+}
 
-/* Harness — tiny gap between side-by-side concurrent events */
+/* ─── 8. Event blocks ───────────────────────────────────────────────────────── */
+
 .fc-timegrid .fc-timegrid-event-harness {
   padding-right: 2px;
 }
@@ -194,51 +260,25 @@
   overflow: hidden;
   cursor: pointer !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
-  transition: filter 0.12s ease, box-shadow 0.12s ease;
+  transition: filter 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
 }
 
 .fc-timegrid .fc-timegrid-event:hover {
   filter: brightness(0.92);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
 
-/* Inset padding inside the event block */
 .fc-timegrid .fc-timegrid-event .fc-event-main {
   padding: 3px 6px 2px;
-}
-
-/* Event time — small, slightly muted */
-.fc-timegrid .fc-timegrid-event .fc-event-time {
-  font-size: 0.65rem;
-  font-weight: 500;
-  opacity: 0.85;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.3;
-}
-
-/* Event title — truncate with ellipsis */
-.fc-timegrid .fc-timegrid-event .fc-event-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.3;
-}
-
-/* Event title container */
-.fc-timegrid .fc-timegrid-event .fc-event-title-container {
   overflow: hidden;
 }
 
-/* Mirror event (drag preview) */
+/* Drag mirror */
 .fc-timegrid .fc-timegrid-event.fc-event-mirror {
   opacity: 0.6;
 }
 
-/* All-day events in the top strip */
+/* All-day events */
 .fc-timegrid .fc-daygrid-event {
   border-radius: 4px !important;
   cursor: pointer !important;
@@ -253,17 +293,17 @@
   white-space: nowrap;
 }
 
-/* ─── 7. Selection highlight ───────────────────────────────────────────────── */
+/* ─── 9. Selection highlight ───────────────────────────────────────────────── */
 
 .fc-timegrid .fc-highlight {
   background: #6366f11a !important;
   border-radius: 4px;
 }
 
-/* ─── 8. Scrollbar polish ───────────────────────────────────────────────────── */
+/* ─── 10. Scrollbar polish ──────────────────────────────────────────────────── */
 
 .fc-scroller::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .fc-scroller::-webkit-scrollbar-track {
@@ -271,18 +311,64 @@
 }
 
 .fc-scroller::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #cbd5e4;
   border-radius: 3px;
 }
 
 .fc-scroller::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: #94a3b8;
 }
 
 .dark .fc-scroller::-webkit-scrollbar-thumb {
-  background: #374151;
+  background: #1e2d40;
 }
 
 .dark .fc-scroller::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: #2d3f55;
+}
+
+/* ─── 11. Typography improvements ──────────────────────────────────────────── */
+
+/* Monospaced (tabular) numerals so stacked times align on a strict vertical grid */
+.fc-timegrid-slot-label-cushion,
+.fc-timegrid-event .fc-event-time,
+.fc-daygrid-event .fc-event-time,
+.fc-list-event-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Meridiem ("a" / "p") inside event blocks — secondary context, visually recessed */
+.fc-event-meridiem {
+  font-size: 0.78em;
+  font-weight: 400;
+  opacity: 0.55;
+  letter-spacing: 0;
+}
+
+/* Meridiem in the time-axis slot labels */
+.fc-slot-meridiem {
+  font-size: 0.78em;
+  font-weight: 600;
+  opacity: 0.58;
+}
+
+/* ─── 12. Time-of-day accent strip ──────────────────────────────────────────── */
+
+/* Accent strip is painted as a ::before pseudo-element so it never
+   conflicts with the border-width:0 rule above. */
+.fc-timegrid .fc-timegrid-event {
+  position: relative;
+}
+
+.fc-timegrid .fc-timegrid-event::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--tod-accent, transparent);
+  border-radius: 6px 0 0 6px;
+  z-index: 1;
+  pointer-events: none;
 }

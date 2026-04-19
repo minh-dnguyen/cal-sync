@@ -48,11 +48,14 @@
 /* FullCalendar dark-mode text fixes */
 .dark .fc-col-header-cell-cushion,
 .dark .fc-daygrid-day-number,
-.dark .fc-timegrid-slot-label-cushion,
 .dark .fc-list-day-cushion,
 .dark .fc-list-event-title,
 .dark .fc-toolbar-title {
   color: #f3f4f6;
+}
+/* Time-axis labels use a muted slate color defined in timegrid.css */
+.dark .fc-timegrid-slot-label-cushion {
+  color: #3a5068;
 }
 
 /* Base: all day numbers are circle-shaped with a smooth transition */
@@ -132,4 +135,28 @@
   .sidebar-link.active {
     @apply bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300;
   }
+}
+
+
+/* ── Event description HTML (Google / Outlook rich text) ──────────────────── */
+.event-description a {
+  color: #6366f1;
+  text-decoration: underline;
+  word-break: break-all;
+}
+.dark .event-description a {
+  color: #818cf8;
+}
+.event-description b,
+.event-description strong {
+  font-weight: 600;
+  color: inherit;
+}
+.event-description i,
+.event-description em {
+  font-style: italic;
+}
+.event-description br {
+  display: block;
+  margin-bottom: 0.15em;
 }

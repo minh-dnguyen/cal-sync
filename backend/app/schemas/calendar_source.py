@@ -38,3 +38,14 @@ class GoogleExchangeRequest(BaseModel):
 class GoogleSyncResponse(BaseModel):
     synced: int
     source: CalendarSourceResponse
+
+
+class OutlookExchangeRequest(BaseModel):
+    """Body for POST /auth/outlook/exchange."""
+    code: str
+    keep_source_colors: bool = False
+
+
+class OutlookSyncResponse(BaseModel):
+    synced: int
+    source: CalendarSourceResponse

@@ -36,6 +36,7 @@ export interface CalEvent {
   external_id: string | null;
   reminder_minutes: number | null;
   calendar_source_id: string | null;
+  outlook_categories: string[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -73,6 +74,7 @@ export interface FcEvent {
   allDay: boolean;
   backgroundColor: string;
   borderColor: string;
+  editable: boolean;
   rrule?: string;
   extendedProps: {
     description: string | null;

@@ -1,6 +1,27 @@
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { CalEvent, EventCreate, EventUpdate } from "@/types";
+
+const SYNC_CHANNEL = "calsync-events";
+
+function broadcastInvalidate() {
+  try { new BroadcastChannel(SYNC_CHANNEL).postMessage("invalidate"); } catch {}
+}
+
+/** Call once at the app root to keep other tabs in sync. */
+export function useEventSyncListener() {
+  const qc = useQueryClient();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const ch = new BroadcastChannel(SYNC_CHANNEL);
+    ch.onmessage = () => {
+      qc.invalidateQueries({ queryKey: ["events"] });
+      qc.invalidateQueries({ queryKey: ["calendar-sources"] });
+    };
+    return () => ch.close();
+  }, [qc]);
+}
 
 export function useEvents(start?: string, end?: string) {
   return useQuery<CalEvent[]>({
@@ -18,7 +39,7 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: (body: EventCreate) =>
       api.post<CalEvent>("/api/v1/events", body).then((r) => r.data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["events"] }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["events"] }); broadcastInvalidate(); },
   });
 }
 
@@ -27,7 +48,7 @@ export function useUpdateEvent() {
   return useMutation({
     mutationFn: ({ id, body }: { id: string; body: EventUpdate }) =>
       api.patch<CalEvent>(`/api/v1/events/${id}`, body).then((r) => r.data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["events"] }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["events"] }); broadcastInvalidate(); },
   });
 }
 
@@ -35,7 +56,7 @@ export function useDeleteEvent() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => api.delete(`/api/v1/events/${id}`),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["events"] }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["events"] }); broadcastInvalidate(); },
   });
 }
 
@@ -67,6 +88,27 @@ export function useGoogleInit() {
 
 /** Sync events for a connected Google Calendar source. */
 export function useSyncGoogleCalendar() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (sourceId: string) =>
+      api.post(`/api/v1/calendar-sources/${sourceId}/sync`).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["calendar-sources"] });
+      qc.invalidateQueries({ queryKey: ["events"] });
+    },
+  });
+}
+
+/** Initiate Outlook Calendar OAuth — fetches the Microsoft authorization URL. */
+export function useOutlookInit() {
+  return useMutation({
+    mutationFn: () =>
+      api.get<{ auth_url: string }>("/api/v1/auth/outlook/init").then((r) => r.data.auth_url),
+  });
+}
+
+/** Sync events for a connected Outlook Calendar source. */
+export function useSyncOutlookCalendar() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (sourceId: string) =>

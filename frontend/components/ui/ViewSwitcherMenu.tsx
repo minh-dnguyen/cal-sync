@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { ChevronDown, Sun, LayoutGrid, CalendarRange, AlignJustify } from "lucide-react";
+import { ChevronDown, Sun, CalendarDays, LayoutGrid, CalendarRange, AlignJustify } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useCalendar } from "@/contexts/CalendarContext";
 
 const VIEW_OPTIONS = [
   { key: "timeGridDay",    icon: Sun,           labelKey: "day"      },
+  { key: "timeGridWeek",   icon: CalendarDays,  labelKey: "week"     },
   { key: "dayGridMonth",   icon: LayoutGrid,    labelKey: "month"    },
   { key: "multiMonthYear", icon: CalendarRange, labelKey: "year"     },
   { key: "listYear",       icon: AlignJustify,  labelKey: "schedule" },

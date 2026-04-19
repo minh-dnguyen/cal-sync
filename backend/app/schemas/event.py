@@ -1,6 +1,7 @@
+import json
 from uuid import UUID
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from app.models.event import EventSource
 
 
@@ -41,7 +42,21 @@ class EventResponse(BaseModel):
     external_id: str | None
     reminder_minutes: int | None
     calendar_source_id: UUID | None
+    outlook_categories: list[str] | None
     created_at: datetime
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+    @field_validator("outlook_categories", mode="before")
+    @classmethod
+    def parse_outlook_categories(cls, v: str | list | None) -> list[str] | None:
+        if v is None:
+            return None
+        if isinstance(v, list):
+            return v
+        try:
+            parsed = json.loads(v)
+            return parsed if isinstance(parsed, list) else None
+        except (json.JSONDecodeError, TypeError):
+            return None

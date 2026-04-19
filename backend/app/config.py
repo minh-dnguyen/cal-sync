@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     # Phase 4 – Microsoft Outlook
     MICROSOFT_CLIENT_ID: str = ""
     MICROSOFT_CLIENT_SECRET: str = ""
-    MICROSOFT_REDIRECT_URI: str = "http://localhost:3000/api/auth/outlook/callback"
+    MICROSOFT_REDIRECT_URI: str = "http://localhost:3000/auth/outlook/callback"
 
     # Phase 4 – Notifications
     REDIS_URL: str = "redis://localhost:6379/0"

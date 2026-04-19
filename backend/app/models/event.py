@@ -36,6 +36,9 @@ class Event(Base):
     # Original ID from Google Calendar / Outlook — used to avoid duplicates
     external_id = Column(String, nullable=True, index=True)
     reminder_minutes = Column(Integer, nullable=True)  # e.g. 15 = notify 15 min before
+    reminder_sent_at = Column(DateTime(timezone=True), nullable=True)  # set once email is dispatched
+    # Outlook-only: JSON-encoded list of category names, e.g. '["Work", "Personal"]'
+    outlook_categories = Column(Text, nullable=True)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

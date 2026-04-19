@@ -13,6 +13,7 @@ export function toFcEvent(event: CalEvent, sources: CalendarSource[]): FcEvent {
     allDay: event.all_day,
     backgroundColor: color,
     borderColor: color,
+    editable: event.source === "local",
     extendedProps: {
       description: event.description,
       source: event.source,

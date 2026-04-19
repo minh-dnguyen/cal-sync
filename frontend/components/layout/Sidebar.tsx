@@ -15,7 +15,7 @@ import { MiniCalendar } from "@/components/calendar/MiniCalendar";
 import { useAuth } from "@/hooks/useAuth";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useUiStore } from "@/store/uiStore";
-import { useSyncHolidays, useSyncGoogleCalendar, useGoogleInit } from "@/hooks/useEvents";
+import { useSyncHolidays, useSyncGoogleCalendar, useGoogleInit, useSyncOutlookCalendar, useOutlookInit } from "@/hooks/useEvents";
 
 interface SidebarProps {
   open: boolean;
@@ -209,8 +209,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
   const syncHolidays = useSyncHolidays();
   const syncGoogle = useSyncGoogleCalendar();
+  const syncOutlook = useSyncOutlookCalendar();
   const googleInit = useGoogleInit();
+  const outlookInit = useOutlookInit();
   const googleSource = sources.find((s) => s.source_type === "google");
+  const outlookSource = sources.find((s) => s.source_type === "outlook");
 
   // Split sources by type
   const localSources   = sources.filter((s) => s.source_type === "local");
@@ -319,6 +322,20 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     />
                   </button>
                 )}
+                {src.source_type === "outlook" && (
+                  <button
+                    type="button"
+                    title={t("sync_now")}
+                    disabled={syncOutlook.isPending}
+                    onClick={() => syncOutlook.mutate(src.id)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded text-gray-400 hover:text-primary-500 disabled:cursor-wait"
+                  >
+                    <RefreshCw
+                      size={12}
+                      className={syncOutlook.isPending ? "animate-spin" : ""}
+                    />
+                  </button>
+                )}
               </div>
             ))}
 
@@ -347,6 +364,36 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate leading-snug">
                     {googleInit.isPending ? t("connecting_google") : t("connect_google")}
+                  </p>
+                </div>
+              </button>
+            )}
+
+            {/* "Connect Outlook" button — shown only when not yet connected */}
+            {!outlookSource && (
+              <button
+                type="button"
+                disabled={outlookInit.isPending}
+                onClick={() => {
+                  outlookInit.mutate(undefined, {
+                    onSuccess: (authUrl) => { window.location.href = authUrl; },
+                  });
+                }}
+                className={`flex items-center gap-2.5 px-3 py-1.5 w-full rounded-lg transition-colors text-left ${
+                  outlookInit.isPending
+                    ? "opacity-60 cursor-wait"
+                    : "hover:bg-app-surface cursor-pointer"
+                }`}
+              >
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 flex-shrink-0" fill="none">
+                  <rect x="1"  y="1"  width="10" height="10" fill="#F25022" />
+                  <rect x="13" y="1"  width="10" height="10" fill="#7FBA00" />
+                  <rect x="1"  y="13" width="10" height="10" fill="#00A4EF" />
+                  <rect x="13" y="13" width="10" height="10" fill="#FFB900" />
+                </svg>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate leading-snug">
+                    {outlookInit.isPending ? t("connecting_outlook") : t("connect_outlook")}
                   </p>
                 </div>
               </button>
@@ -391,7 +438,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       <div className="p-3 border-t border-app-border">
         <Link
           href="/settings"
-          onClick={onClose}
           className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ${
             pathname === "/settings"
               ? "bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-medium"

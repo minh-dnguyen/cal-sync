@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
@@ -28,6 +29,7 @@ export default function RegisterPage() {
     country_code: "",
     timezone:     Intl.DateTimeFormat().resolvedOptions().timeZone ?? "UTC",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [error,   setError]   = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -117,15 +119,25 @@ export default function RegisterPage() {
           {/* Password */}
           <div>
             <label className={labelClass}>{t("password")}</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              placeholder={t("min_password")}
-              className={inputClass}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+                placeholder={t("min_password")}
+                className={inputClass + " pr-10"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           {/*

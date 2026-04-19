@@ -154,6 +154,15 @@ const en = {
   google_connect_error:       "Could not connect Google Calendar. Try again.",
   disconnect_confirm:         "Disconnect Google Calendar? Your synced events will be removed.",
   keep_google_colors:         "Keep Google event colors",
+  connect_outlook:             "Connect Outlook Calendar",
+  connecting_outlook:          "Connecting…",
+  outlook_connected_as:        "Connected as {{email}}",
+  outlook_connected:           "Outlook Calendar connected",
+  syncing_outlook:             "Syncing…",
+  outlook_sync_error:          "Sync failed. Try reconnecting Outlook.",
+  outlook_connect_error:       "Could not connect Outlook Calendar. Try again.",
+  disconnect_outlook_confirm:  "Disconnect Outlook Calendar? Your synced events will be removed.",
+  keep_outlook_colors:         "Keep Outlook event colors",
 };
 
 // ─── French ──────────────────────────────────────────────────────────────────
@@ -280,6 +289,15 @@ const fr: TranslationKeys = {
   google_connect_error:       "Impossible de connecter Google Agenda. Réessayez.",
   disconnect_confirm:         "Déconnecter Google Agenda ? Vos événements synchronisés seront supprimés.",
   keep_google_colors:         "Conserver les couleurs des événements Google",
+  connect_outlook:             "Connecter Outlook Calendar",
+  connecting_outlook:          "Connexion…",
+  outlook_connected_as:        "Connecté en tant que {{email}}",
+  outlook_connected:           "Outlook Calendar connecté",
+  syncing_outlook:             "Synchronisation…",
+  outlook_sync_error:          "Échec de la synchronisation. Essayez de reconnecter Outlook.",
+  outlook_connect_error:       "Impossible de connecter Outlook Calendar. Réessayez.",
+  disconnect_outlook_confirm:  "Déconnecter Outlook Calendar ? Vos événements synchronisés seront supprimés.",
+  keep_outlook_colors:         "Conserver les couleurs des événements Outlook",
 };
 
 // ─── Spanish ─────────────────────────────────────────────────────────────────
@@ -406,6 +424,15 @@ const es: TranslationKeys = {
   google_connect_error:       "No se pudo conectar Google Calendar. Inténtalo de nuevo.",
   disconnect_confirm:         "¿Desconectar Google Calendar? Tus eventos sincronizados serán eliminados.",
   keep_google_colors:         "Mantener colores de eventos de Google",
+  connect_outlook:             "Conectar Outlook Calendar",
+  connecting_outlook:          "Conectando…",
+  outlook_connected_as:        "Conectado como {{email}}",
+  outlook_connected:           "Outlook Calendar conectado",
+  syncing_outlook:             "Sincronizando…",
+  outlook_sync_error:          "Error al sincronizar. Intenta reconectar Outlook.",
+  outlook_connect_error:       "No se pudo conectar Outlook Calendar. Inténtalo de nuevo.",
+  disconnect_outlook_confirm:  "¿Desconectar Outlook Calendar? Tus eventos sincronizados serán eliminados.",
+  keep_outlook_colors:         "Mantener colores de eventos de Outlook",
 };
 
 // ─── German ──────────────────────────────────────────────────────────────────
@@ -532,6 +559,15 @@ const de: TranslationKeys = {
   google_connect_error:       "Google Kalender konnte nicht verbunden werden. Erneut versuchen.",
   disconnect_confirm:         "Google Kalender trennen? Ihre synchronisierten Ereignisse werden entfernt.",
   keep_google_colors:         "Google-Ereignisfarben beibehalten",
+  connect_outlook:             "Outlook Kalender verbinden",
+  connecting_outlook:          "Verbindung…",
+  outlook_connected_as:        "Verbunden als {{email}}",
+  outlook_connected:           "Outlook Kalender verbunden",
+  syncing_outlook:             "Synchronisierung…",
+  outlook_sync_error:          "Synchronisierung fehlgeschlagen. Outlook erneut verbinden.",
+  outlook_connect_error:       "Outlook Kalender konnte nicht verbunden werden. Erneut versuchen.",
+  disconnect_outlook_confirm:  "Outlook Kalender trennen? Ihre synchronisierten Ereignisse werden entfernt.",
+  keep_outlook_colors:         "Outlook-Ereignisfarben beibehalten",
 };
 
 // ─── Portuguese ──────────────────────────────────────────────────────────────
@@ -658,6 +694,15 @@ const pt: TranslationKeys = {
   google_connect_error:       "Não foi possível conectar o Google Agenda. Tente novamente.",
   disconnect_confirm:         "Desconectar o Google Agenda? Seus eventos sincronizados serão removidos.",
   keep_google_colors:         "Manter cores dos eventos do Google",
+  connect_outlook:             "Conectar Outlook Calendar",
+  connecting_outlook:          "Conectando…",
+  outlook_connected_as:        "Conectado como {{email}}",
+  outlook_connected:           "Outlook Calendar conectado",
+  syncing_outlook:             "Sincronizando…",
+  outlook_sync_error:          "Falha na sincronização. Tente reconectar o Outlook.",
+  outlook_connect_error:       "Não foi possível conectar o Outlook Calendar. Tente novamente.",
+  disconnect_outlook_confirm:  "Desconectar o Outlook Calendar? Seus eventos sincronizados serão removidos.",
+  keep_outlook_colors:         "Manter cores dos eventos do Outlook",
 };
 
 // ─── Italian ─────────────────────────────────────────────────────────────────
@@ -784,6 +829,15 @@ const it: TranslationKeys = {
   google_connect_error:       "Impossibile collegare Google Calendar. Riprova.",
   disconnect_confirm:         "Disconnettere Google Calendar? Gli eventi sincronizzati verranno rimossi.",
   keep_google_colors:         "Mantieni i colori degli eventi Google",
+  connect_outlook:             "Collega Outlook Calendar",
+  connecting_outlook:          "Connessione…",
+  outlook_connected_as:        "Connesso come {{email}}",
+  outlook_connected:           "Outlook Calendar collegato",
+  syncing_outlook:             "Sincronizzazione…",
+  outlook_sync_error:          "Sincronizzazione non riuscita. Riprova a collegare Outlook.",
+  outlook_connect_error:       "Impossibile collegare Outlook Calendar. Riprova.",
+  disconnect_outlook_confirm:  "Disconnettere Outlook Calendar? Gli eventi sincronizzati verranno rimossi.",
+  keep_outlook_colors:         "Mantieni i colori degli eventi Outlook",
 };
 
 // ─── Russian ─────────────────────────────────────────────────────────────────
@@ -910,6 +964,15 @@ const ru: TranslationKeys = {
   google_connect_error:       "Не удалось подключить Google Календарь. Повторите попытку.",
   disconnect_confirm:         "Отключить Google Календарь? Синхронизированные события будут удалены.",
   keep_google_colors:         "Сохранить цвета событий Google",
+  connect_outlook:             "Подключить Outlook Календарь",
+  connecting_outlook:          "Подключение…",
+  outlook_connected_as:        "Подключено как {{email}}",
+  outlook_connected:           "Outlook Календарь подключён",
+  syncing_outlook:             "Синхронизация…",
+  outlook_sync_error:          "Ошибка синхронизации. Повторите подключение Outlook.",
+  outlook_connect_error:       "Не удалось подключить Outlook Календарь. Повторите попытку.",
+  disconnect_outlook_confirm:  "Отключить Outlook Календарь? Синхронизированные события будут удалены.",
+  keep_outlook_colors:         "Сохранить цвета событий Outlook",
 };
 
 // ─── Chinese ─────────────────────────────────────────────────────────────────
@@ -1036,6 +1099,15 @@ const zh: TranslationKeys = {
   google_connect_error:       "无法连接 Google 日历，请重试。",
   disconnect_confirm:         "断开 Google 日历？已同步的事件将被删除。",
   keep_google_colors:         "保留 Google 事件颜色",
+  connect_outlook:             "连接 Outlook 日历",
+  connecting_outlook:          "连接中…",
+  outlook_connected_as:        "已连接为 {{email}}",
+  outlook_connected:           "Outlook 日历已连接",
+  syncing_outlook:             "同步中…",
+  outlook_sync_error:          "同步失败，请重新连接 Outlook。",
+  outlook_connect_error:       "无法连接 Outlook 日历，请重试。",
+  disconnect_outlook_confirm:  "断开 Outlook 日历？已同步的事件将被删除。",
+  keep_outlook_colors:         "保留 Outlook 事件颜色",
 };
 
 // ─── Japanese ────────────────────────────────────────────────────────────────
@@ -1162,6 +1234,15 @@ const ja: TranslationKeys = {
   google_connect_error:       "Google カレンダーに接続できませんでした。再試行してください。",
   disconnect_confirm:         "Google カレンダーを切断しますか？同期済みのイベントは削除されます。",
   keep_google_colors:         "Google イベントの色を保持する",
+  connect_outlook:             "Outlook カレンダーを接続",
+  connecting_outlook:          "接続中…",
+  outlook_connected_as:        "{{email}} として接続",
+  outlook_connected:           "Outlook カレンダーが接続されました",
+  syncing_outlook:             "同期中…",
+  outlook_sync_error:          "同期に失敗しました。Outlook を再接続してください。",
+  outlook_connect_error:       "Outlook カレンダーに接続できませんでした。再試行してください。",
+  disconnect_outlook_confirm:  "Outlook カレンダーを切断しますか？同期済みのイベントは削除されます。",
+  keep_outlook_colors:         "Outlook イベントの色を保持する",
 };
 
 // ─── Arabic ──────────────────────────────────────────────────────────────────
@@ -1288,6 +1369,15 @@ const ar: TranslationKeys = {
   google_connect_error:       "تعذّر ربط تقويم Google. حاول مجدداً.",
   disconnect_confirm:         "فصل تقويم Google؟ ستتم إزالة الأحداث المزامنة.",
   keep_google_colors:         "الاحتفاظ بألوان أحداث Google",
+  connect_outlook:             "ربط تقويم Outlook",
+  connecting_outlook:          "جارِ الربط…",
+  outlook_connected_as:        "متصل بـ {{email}}",
+  outlook_connected:           "تقويم Outlook متصل",
+  syncing_outlook:             "جارِ المزامنة…",
+  outlook_sync_error:          "فشلت المزامنة. حاول إعادة ربط Outlook.",
+  outlook_connect_error:       "تعذّر ربط تقويم Outlook. حاول مجددًا.",
+  disconnect_outlook_confirm:  "فصل تقويم Outlook؟ ستتم إزالة الأحداث المزامنة.",
+  keep_outlook_colors:         "الاحتفاظ بألوان أحداث Outlook",
 };
 
 // ─── Korean ──────────────────────────────────────────────────────────────────
@@ -1414,6 +1504,15 @@ const ko: TranslationKeys = {
   google_connect_error:       "Google 캘린더에 연결할 수 없습니다. 다시 시도하세요.",
   disconnect_confirm:         "Google 캘린더 연결을 해제할까요? 동기화된 이벤트가 삭제됩니다.",
   keep_google_colors:         "Google 이벤트 색상 유지",
+  connect_outlook:             "Outlook 캨린더 연결",
+  connecting_outlook:          "연결 중…",
+  outlook_connected_as:        "{{email}}로 연결됨",
+  outlook_connected:           "Outlook 캨린더가 연결되었습니다",
+  syncing_outlook:             "동기화 중…",
+  outlook_sync_error:          "동기화 실패. Outlook을 다시 연결해 보세요.",
+  outlook_connect_error:       "Outlook 캨린더에 연결할 수 없습니다. 다시 시도하세요.",
+  disconnect_outlook_confirm:  "Outlook 캨린더 연결을 해제할까요? 동기화된 이벤트가 삭제됩니다.",
+  keep_outlook_colors:         "Outlook 이벤트 색상 유지",
 };
 
 // ─── Vietnamese ──────────────────────────────────────────────────────────────
@@ -1540,6 +1639,15 @@ const vi: TranslationKeys = {
   google_connect_error:       "Không thể kết nối Google Calendar. Thử lại.",
   disconnect_confirm:         "Ngắt kết nối Google Calendar? Các sự kiện đã đồng bộ sẽ bị xóa.",
   keep_google_colors:         "Giữ màu sự kiện Google",
+  connect_outlook:             "Kết nối Outlook Calendar",
+  connecting_outlook:          "Đang kết nối…",
+  outlook_connected_as:        "Đã kết nối với {{email}}",
+  outlook_connected:           "Outlook Calendar đã kết nối",
+  syncing_outlook:             "Đang đồng bộ…",
+  outlook_sync_error:          "Đồng bộ thất bại. Thử kết nối lại Outlook.",
+  outlook_connect_error:       "Không thể kết nối Outlook Calendar. Thử lại.",
+  disconnect_outlook_confirm:  "Ngắt kết nối Outlook Calendar? Các sự kiện đã đồng bộ sẽ bị xóa.",
+  keep_outlook_colors:         "Giữ màu sự kiện Outlook",
 };
 
 // ─── Turkish ─────────────────────────────────────────────────────────────────
@@ -1666,6 +1774,15 @@ const tr: TranslationKeys = {
   google_connect_error:       "Google Takvim bağlanamadı. Tekrar deneyin.",
   disconnect_confirm:         "Google Takvim bağlantısı kesilsin mi? Senkronize edilmiş etkinlikler kaldırılacak.",
   keep_google_colors:         "Google etkinlik renklerini koru",
+  connect_outlook:             "Outlook Takvim'i Bağla",
+  connecting_outlook:          "Bağlanıyor…",
+  outlook_connected_as:        "{{email}} olarak bağlandı",
+  outlook_connected:           "Outlook Takvim bağlandı",
+  syncing_outlook:             "Senkronize ediliyor…",
+  outlook_sync_error:          "Senkronizasyon başarısız. Outlook'u yeniden bağlamayı deneyin.",
+  outlook_connect_error:       "Outlook Takvim bağlanamadı. Tekrar deneyin.",
+  disconnect_outlook_confirm:  "Outlook Takvim bağlantısı kesilsin mi? Senkronize edilmiş etkinlikler kaldırılacak.",
+  keep_outlook_colors:         "Outlook etkinlik renklerini koru",
 };
 
 // ─── Polish ──────────────────────────────────────────────────────────────────
@@ -1792,6 +1909,15 @@ const pl: TranslationKeys = {
   google_connect_error:       "Nie można połączyć z Kalendarzem Google. Spróbuj ponownie.",
   disconnect_confirm:         "Rozłączyć Kalendarz Google? Zsynchronizowane wydarzenia zostaną usunięte.",
   keep_google_colors:         "Zachowaj kolory wydarzeń Google",
+  connect_outlook:             "Połącz Outlook Calendar",
+  connecting_outlook:          "Łączenie…",
+  outlook_connected_as:        "Połączono jako {{email}}",
+  outlook_connected:           "Outlook Calendar połączony",
+  syncing_outlook:             "Synchronizacja…",
+  outlook_sync_error:          "Synchronizacja nie powiodła się. Spróbuj ponownie połączyć Outlook.",
+  outlook_connect_error:       "Nie można połączyć z Outlook Calendar. Spróbuj ponownie.",
+  disconnect_outlook_confirm:  "Rozłączyć Outlook Calendar? Zsynchronizowane wydarzenia zostaną usunięte.",
+  keep_outlook_colors:         "Zachowaj kolory wydarzeń Outlook",
 };
 
 // ─── Hindi ────────────────────────────────────────────────────────────────────
@@ -1918,6 +2044,15 @@ const hi: TranslationKeys = {
   google_connect_error:       "Google Calendar से कनेक्ट नहीं हो सका। पुनः प्रयास करें।",
   disconnect_confirm:         "Google Calendar डिस्कनेक्ट करें? सिंक किए गए इवेंट हटा दिए जाएंगे।",
   keep_google_colors:         "Google इवेंट रंग बनाए रखें",
+  connect_outlook:             "Outlook Calendar से जोड़ें",
+  connecting_outlook:          "जोड़ा जा रहा है…",
+  outlook_connected_as:        "{{email}} के रूप में कनेक्ट",
+  outlook_connected:           "Outlook Calendar कनेक्ट है",
+  syncing_outlook:             "सिंक हो रहा है…",
+  outlook_sync_error:          "सिंक विफल। Outlook को फिर से जोड़ें।",
+  outlook_connect_error:       "Outlook Calendar से कनेक्ट नहीं हो सका। पुनः प्रयास करें।",
+  disconnect_outlook_confirm:  "Outlook Calendar डिस्कनेक्ट करें? सिंक किए गए इवेंट हटा दिए जाएंगे।",
+  keep_outlook_colors:         "Outlook इवेंट रंग बनाए रखें",
 };
 
 // ─── Dutch ────────────────────────────────────────────────────────────────────
@@ -2044,6 +2179,15 @@ const nl: TranslationKeys = {
   google_connect_error:       "Kon Google Agenda niet koppelen. Probeer opnieuw.",
   disconnect_confirm:         "Google Agenda ontkoppelen? Gesynchroniseerde evenementen worden verwijderd.",
   keep_google_colors:         "Google-gebeurteniskleuren behouden",
+  connect_outlook:             "Outlook Agenda koppelen",
+  connecting_outlook:          "Koppelen…",
+  outlook_connected_as:        "Verbonden als {{email}}",
+  outlook_connected:           "Outlook Agenda gekoppeld",
+  syncing_outlook:             "Synchroniseren…",
+  outlook_sync_error:          "Synchronisatie mislukt. Probeer Outlook opnieuw te koppelen.",
+  outlook_connect_error:       "Kon Outlook Agenda niet koppelen. Probeer opnieuw.",
+  disconnect_outlook_confirm:  "Outlook Agenda ontkoppelen? Gesynchroniseerde evenementen worden verwijderd.",
+  keep_outlook_colors:         "Outlook-gebeurteniskleuren behouden",
 };
 
 export const TRANSLATIONS: Record<string, TranslationKeys> = {

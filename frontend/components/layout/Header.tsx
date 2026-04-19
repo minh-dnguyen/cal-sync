@@ -26,14 +26,17 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const { t, i18n } = useTranslation();
   const pathname = usePathname();
   const router   = useRouter();
-  const { goToday, goPrev, goNext, view, currentDate } = useCalendar();
+  const { goToday, goPrev, goNext, view, currentDate, title } = useCalendar();
 
   const isSettings  = pathname === "/settings";
   const isYearView  = view === "multiMonthYear";
   const isListView  = view === "listYear";
+  const isWeekView  = view === "timeGridWeek";
   const weekNum     = getISOWeek(currentDate);
   const dateLabel   = isYearView || isListView
     ? String(currentDate.getFullYear())
+    : isWeekView
+    ? title   // FullCalendar formats this as "Apr 14 – 20, 2026"
     : currentDate.toLocaleString(i18n.language, { month: "long", year: "numeric" });
   const weekLabel   = t("week") + " " + weekNum;
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
@@ -15,6 +16,7 @@ function LoginContent() {
   const setToken = useAuthStore((s) => s.setToken);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // Pre-fill email when switching accounts from the profile menu
   useEffect(() => {
@@ -87,14 +89,24 @@ function LoginContent() {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
               {t("password")}
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="••••••••"
-              className="w-full px-3 py-2.5 rounded-lg border border-app-border dark:border-gray-600 bg-app-input dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent text-sm"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="w-full px-3 py-2.5 pr-10 rounded-lg border border-app-border dark:border-gray-600 bg-app-input dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
 
           <button

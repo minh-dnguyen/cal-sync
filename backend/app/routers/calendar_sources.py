@@ -1,3 +1,4 @@
+import json
 from uuid import UUID
 from datetime import datetime, timezone, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -9,12 +10,14 @@ from app.schemas.calendar_source import (
     UpdateCalendarSourceRequest,
     SyncHolidaysRequest,
     GoogleSyncResponse,
+    OutlookSyncResponse,
 )
 from app.models.calendar_source import CalendarSource, SourceType
 from app.models.event import Event, EventSource
 from app.models.user import User
 from app.services.holiday_service import fetch_public_holidays
 from app.services import google_calendar_service as gcs
+from app.services import outlook_calendar_service as ocs
 from typing import List
 
 router = APIRouter(prefix="/calendar-sources", tags=["calendar-sources"])
@@ -143,12 +146,12 @@ async def sync_holidays(
 
 
 @router.post("/{source_id}/sync", response_model=GoogleSyncResponse)
-async def sync_google_source(
+async def sync_source(
     source_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Fetch events from Google Calendar and upsert them into the DB.
+    """Fetch events from a connected Google or Outlook calendar and upsert them.
 
     Syncs 1 year back and 1 year forward from today.
     Uses external_id to avoid duplicates on repeated runs.
@@ -158,85 +161,71 @@ async def sync_google_source(
         .filter(
             CalendarSource.id == source_id,
             CalendarSource.user_id == current_user.id,
-            CalendarSource.source_type == SourceType.google,
+            CalendarSource.source_type.in_([SourceType.google, SourceType.outlook]),
         )
         .first()
     )
     if not source:
-        raise HTTPException(status_code=404, detail="Google calendar source not found")
+        raise HTTPException(status_code=404, detail="Calendar source not found")
 
     if not source.access_token:
-        raise HTTPException(status_code=400, detail="Google Calendar not connected")
+        raise HTTPException(status_code=400, detail="Calendar not connected")
 
     now = datetime.now(timezone.utc)
     time_min = now - timedelta(days=365)
     time_max = now + timedelta(days=365)
 
-    try:
-        g_events, fresh_token = await gcs.fetch_events(
-            source.access_token,
-            source.refresh_token,
-            time_min,
-            time_max,
-        )
-    except Exception:
-        raise HTTPException(status_code=502, detail="Failed to fetch events from Google Calendar")
-
-    # Persist a refreshed token if it changed
-    if fresh_token != source.access_token:
-        source.access_token = fresh_token
-        db.flush()
-
-    # Fetch the Google color dictionary once for this sync run.
-    # When keeping source colors, also update source.color to the actual
-    # Google Calendar background so events without a per-event colorId
-    # fall back to the real calendar color in the frontend.
-    colors_map: dict = {}
-    if source.keep_source_colors:
+    # ── Google sync ───────────────────────────────────────────────────────────
+    if source.source_type == SourceType.google:
         try:
-            colors_map = await gcs.fetch_event_colors(fresh_token)
-        except Exception:
-            colors_map = {}  # Non-critical; falls back to no per-event color
-        try:
-            cal_color = await gcs.get_primary_calendar_color(fresh_token)
-            if cal_color:
-                source.color = cal_color
-        except Exception:
-            pass  # Non-critical; keep existing source color
-
-    synced = 0
-    for g_event in g_events:
-        parsed = gcs.parse_google_event(g_event)
-        if parsed is None:
-            continue
-
-        # Resolve event color using the API-fetched color dictionary.
-        # Logic: event.colorId → colorsMap[colorId] (per-event color)
-        #        no colorId    → None (falls back to source.color in the frontend)
-        color_id = parsed["color_id"]
-        event_color = colors_map.get(color_id) if (source.keep_source_colors and color_id) else None
-
-        existing = (
-            db.query(Event)
-            .filter(
-                Event.external_id == parsed["external_id"],
-                Event.user_id == current_user.id,
+            raw_events, fresh_token = await gcs.fetch_events(
+                source.access_token, source.refresh_token, time_min, time_max,
             )
-            .first()
-        )
+        except Exception:
+            raise HTTPException(status_code=502, detail="Failed to fetch events from Google Calendar")
 
-        if existing:
-            existing.is_deleted = False
-            existing.title = parsed["title"]
-            existing.description = parsed["description"]
-            existing.start_time = parsed["start_time"]
-            existing.end_time = parsed["end_time"]
-            existing.all_day = parsed["all_day"]
-            existing.color = event_color
-            existing.calendar_source_id = source.id
-        else:
-            db.add(
-                Event(
+        if fresh_token != source.access_token:
+            source.access_token = fresh_token
+            db.flush()
+
+        colors_map: dict = {}
+        if source.keep_source_colors:
+            try:
+                colors_map = await gcs.fetch_event_colors(fresh_token)
+            except Exception:
+                colors_map = {}
+            try:
+                cal_color = await gcs.get_primary_calendar_color(fresh_token)
+                if cal_color:
+                    source.color = cal_color
+            except Exception:
+                pass
+
+        synced = 0
+        for raw in raw_events:
+            parsed = gcs.parse_google_event(raw)
+            if parsed is None:
+                continue
+
+            color_id = parsed["color_id"]
+            event_color = colors_map.get(color_id) if (source.keep_source_colors and color_id) else None
+
+            existing = (
+                db.query(Event)
+                .filter(Event.external_id == parsed["external_id"], Event.user_id == current_user.id)
+                .first()
+            )
+            if existing:
+                existing.is_deleted = False
+                existing.title = parsed["title"]
+                existing.description = parsed["description"]
+                existing.start_time = parsed["start_time"]
+                existing.end_time = parsed["end_time"]
+                existing.all_day = parsed["all_day"]
+                existing.color = event_color
+                existing.calendar_source_id = source.id
+            else:
+                db.add(Event(
                     user_id=current_user.id,
                     calendar_source_id=source.id,
                     title=parsed["title"],
@@ -247,9 +236,76 @@ async def sync_google_source(
                     color=event_color,
                     source=EventSource.google,
                     external_id=parsed["external_id"],
-                )
+                ))
+                synced += 1
+
+    # ── Outlook sync ──────────────────────────────────────────────────────────
+    else:
+        try:
+            raw_events, fresh_token = await ocs.fetch_events(
+                source.access_token, source.refresh_token, time_min, time_max,
             )
-            synced += 1
+        except Exception:
+            raise HTTPException(status_code=502, detail="Failed to fetch events from Outlook Calendar")
+
+        if fresh_token != source.access_token:
+            source.access_token = fresh_token
+            db.flush()
+
+        colors_map: dict = {}
+        if source.keep_source_colors:
+            try:
+                colors_map = await ocs.fetch_category_colors(fresh_token)
+            except Exception:
+                colors_map = {}
+            try:
+                cal_color = await ocs.get_calendar_color(fresh_token)
+                if cal_color:
+                    source.color = cal_color
+            except Exception:
+                pass
+
+        synced = 0
+        for raw in raw_events:
+            parsed = ocs.parse_outlook_event(raw)
+            if parsed is None:
+                continue
+
+            category = parsed["category"]
+            event_color = colors_map.get(category) if (source.keep_source_colors and category) else None
+            categories_raw = parsed["categories_raw"]
+            outlook_categories_json = json.dumps(categories_raw) if categories_raw else None
+
+            existing = (
+                db.query(Event)
+                .filter(Event.external_id == parsed["external_id"], Event.user_id == current_user.id)
+                .first()
+            )
+            if existing:
+                existing.is_deleted = False
+                existing.title = parsed["title"]
+                existing.description = parsed["description"]
+                existing.start_time = parsed["start_time"]
+                existing.end_time = parsed["end_time"]
+                existing.all_day = parsed["all_day"]
+                existing.color = event_color
+                existing.calendar_source_id = source.id
+                existing.outlook_categories = outlook_categories_json
+            else:
+                db.add(Event(
+                    user_id=current_user.id,
+                    calendar_source_id=source.id,
+                    title=parsed["title"],
+                    description=parsed["description"],
+                    start_time=parsed["start_time"],
+                    end_time=parsed["end_time"],
+                    all_day=parsed["all_day"],
+                    color=event_color,
+                    source=EventSource.outlook,
+                    external_id=parsed["external_id"],
+                    outlook_categories=outlook_categories_json,
+                ))
+                synced += 1
 
     db.commit()
     db.refresh(source)
@@ -277,11 +333,14 @@ async def delete_source(
     if not source:
         raise HTTPException(status_code=404, detail="Calendar source not found")
 
-    # Revoke the OAuth token (best-effort)
-    if source.refresh_token:
-        await gcs.revoke_token(source.refresh_token)
-    elif source.access_token:
-        await gcs.revoke_token(source.access_token)
+    # Revoke the OAuth token (best-effort, provider-specific)
+    if source.source_type == SourceType.google:
+        token = source.refresh_token or source.access_token
+        if token:
+            await gcs.revoke_token(token)
+    elif source.source_type == SourceType.outlook:
+        if source.access_token:
+            await ocs.revoke_token(source.access_token)
 
     # Soft-delete all events from this source
     db.query(Event).filter(
