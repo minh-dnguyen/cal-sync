@@ -33,6 +33,7 @@ class GoogleExchangeRequest(BaseModel):
     """Body for POST /auth/google/exchange."""
     code: str
     keep_source_colors: bool = False
+    redirect_uri: str | None = None
 
 
 class GoogleSyncResponse(BaseModel):
@@ -44,6 +45,7 @@ class OutlookExchangeRequest(BaseModel):
     """Body for POST /auth/outlook/exchange."""
     code: str
     keep_source_colors: bool = False
+    redirect_uri: str | None = None
 
 
 class OutlookSyncResponse(BaseModel):

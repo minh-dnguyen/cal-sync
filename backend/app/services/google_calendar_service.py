@@ -16,11 +16,11 @@ _USERINFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo"
 _CALENDAR_API = "https://www.googleapis.com/calendar/v3"
 
 
-def build_auth_url() -> str:
+def build_auth_url(redirect_uri: Optional[str] = None) -> str:
     """Return the Google OAuth2 authorization URL to redirect the user to."""
     params = {
         "client_id": settings.GOOGLE_CLIENT_ID,
-        "redirect_uri": settings.GOOGLE_REDIRECT_URI,
+        "redirect_uri": redirect_uri or settings.GOOGLE_REDIRECT_URI,
         "response_type": "code",
         "scope": SCOPES,
         "access_type": "offline",
@@ -29,7 +29,7 @@ def build_auth_url() -> str:
     return f"{_AUTH_URL}?{urlencode(params)}"
 
 
-async def exchange_code(code: str) -> dict:
+async def exchange_code(code: str, redirect_uri: Optional[str] = None) -> dict:
     """Exchange an authorization code for access + refresh tokens.
 
     Returns a dict with at least:
@@ -42,7 +42,7 @@ async def exchange_code(code: str) -> dict:
                 "code": code,
                 "client_id": settings.GOOGLE_CLIENT_ID,
                 "client_secret": settings.GOOGLE_CLIENT_SECRET,
-                "redirect_uri": settings.GOOGLE_REDIRECT_URI,
+                "redirect_uri": redirect_uri or settings.GOOGLE_REDIRECT_URI,
                 "grant_type": "authorization_code",
             },
         )

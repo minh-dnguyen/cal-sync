@@ -54,11 +54,12 @@ export function EventPopover({ event, anchor, sources, onClose, onEdit, onDelete
   // Inject description HTML after mount — avoids all SSR/render-phase edge cases
   useEffect(() => {
     if (!descRef.current || !event.description) return;
-    const div = descRef.current;
-    div.innerHTML = event.description;
-    // Sanitize in-place: strip scripts and dangerous attributes
-    div.querySelectorAll("script,style,iframe,object,embed,form").forEach((el) => el.remove());
-    div.querySelectorAll("*").forEach((el) => {
+    // Sanitize into a detached node BEFORE attaching to the DOM so inline
+    // event handlers (onerror, onload, etc.) never fire during parsing.
+    const sandbox = document.createElement("div");
+    sandbox.innerHTML = event.description;
+    sandbox.querySelectorAll("script,style,iframe,object,embed,form").forEach((el) => el.remove());
+    sandbox.querySelectorAll("*").forEach((el) => {
       Array.from(el.attributes).forEach((attr) => {
         if (attr.name.startsWith("on")) el.removeAttribute(attr.name);
         if (attr.name === "href" && /^javascript:/i.test(attr.value)) el.removeAttribute(attr.name);
@@ -68,6 +69,9 @@ export function EventPopover({ event, anchor, sources, onClose, onEdit, onDelete
         el.setAttribute("rel", "noopener noreferrer");
       }
     });
+    const div = descRef.current;
+    div.innerHTML = "";
+    div.append(...Array.from(sandbox.childNodes));
   }, [event.description, mounted]);
 
   // Position after mount so we know the popover's own size

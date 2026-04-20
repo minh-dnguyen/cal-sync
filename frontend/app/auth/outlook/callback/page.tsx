@@ -39,8 +39,9 @@ function CallbackHandler() {
       return;
     }
 
+    const redirectUri = `${window.location.origin}/auth/outlook/callback`;
     api
-      .post("/api/v1/auth/outlook/exchange", { code })
+      .post("/api/v1/auth/outlook/exchange", { code, redirect_uri: redirectUri })
       .then(() => {
         localStorage.setItem("calsync-outlook-just-connected", "true");
         qc.invalidateQueries({ queryKey: ["calendar-sources"] });

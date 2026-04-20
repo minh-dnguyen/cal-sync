@@ -35,7 +35,7 @@ def send_pending_reminders() -> None:
                 Event.reminder_minutes.isnot(None),
                 Event.is_deleted == False,
                 Event.reminder_sent_at.is_(None),
-                Event.start_time > now,
+                Event.start_time >= now,
                 Event.start_time <= look_ahead,
             )
             .all()
@@ -51,16 +51,17 @@ def send_pending_reminders() -> None:
             if not user:
                 continue
 
+            # Mark as sent BEFORE sending so a failed commit on a successful
+            # email send doesn't cause a duplicate on the next run.
+            event.reminder_sent_at = now
+            db.commit()
+
             send_reminder_email(
                 to_email=user.email,
                 event_title=event.title,
                 start_time=event.start_time,
                 minutes_before=event.reminder_minutes,
             )
-
-            # Mark as sent so this event is never dispatched again
-            event.reminder_sent_at = now
-            db.commit()
             logger.info("Reminder dispatched for event %s (user %s)", event.id, user.email)
 
     except Exception:

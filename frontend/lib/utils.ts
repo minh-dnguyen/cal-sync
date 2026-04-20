@@ -101,9 +101,8 @@ export function parseRrule(rrule: string | null): ParsedRrule {
   };
 }
 
-/** Format a datetime-local input value to ISO 8601 with timezone offset */
-export function localInputToISO(value: string, tz: string): string {
-  // For now send as-is; the backend stores with timezone info
+/** Format a datetime-local input value to ISO 8601 (UTC). */
+export function localInputToISO(value: string): string {
   return new Date(value).toISOString();
 }
 

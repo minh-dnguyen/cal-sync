@@ -63,9 +63,9 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)):
 # ── Phase 3: Google Calendar OAuth ───────────────────────────────────────────
 
 @router.get("/google/init")
-def google_init(current_user: User = Depends(get_current_user)):
+def google_init(redirect_uri: str | None = None, current_user: User = Depends(get_current_user)):
     """Return the Google OAuth2 authorization URL for the frontend to redirect to."""
-    auth_url = gcs.build_auth_url()
+    auth_url = gcs.build_auth_url(redirect_uri=redirect_uri)
     return {"auth_url": auth_url}
 
 
@@ -82,7 +82,7 @@ async def google_exchange(
     """
     # Exchange the auth code for tokens
     try:
-        token_data = await gcs.exchange_code(body.code)
+        token_data = await gcs.exchange_code(body.code, redirect_uri=body.redirect_uri)
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to exchange Google authorization code")
 
@@ -139,9 +139,9 @@ async def google_exchange(
 # ── Phase 4: Microsoft Outlook Calendar OAuth ─────────────────────────────────
 
 @router.get("/outlook/init")
-def outlook_init(current_user: User = Depends(get_current_user)):
+def outlook_init(redirect_uri: str | None = None, current_user: User = Depends(get_current_user)):
     """Return the Microsoft OAuth2 authorization URL for the frontend to redirect to."""
-    auth_url = ocs.build_auth_url()
+    auth_url = ocs.build_auth_url(redirect_uri=redirect_uri)
     return {"auth_url": auth_url}
 
 
@@ -156,7 +156,7 @@ async def outlook_exchange(
     Creates a new Outlook CalendarSource (or updates an existing one).
     """
     try:
-        token_data = await ocs.exchange_code(body.code)
+        token_data = await ocs.exchange_code(body.code, redirect_uri=body.redirect_uri)
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to exchange Outlook authorization code")
 
