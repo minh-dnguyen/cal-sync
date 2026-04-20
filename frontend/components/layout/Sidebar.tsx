@@ -196,7 +196,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const [otherCalOpen, setOtherCalOpen] = useState(true);
   const [syncError, setSyncError] = useState(false);
 
-  const { data: sources = [] } = useQuery<CalendarSource[]>({
+  const { data: sources = [], isLoading: sourcesLoading } = useQuery<CalendarSource[]>({
     queryKey: ["calendar-sources"],
     queryFn: () => api.get("/api/v1/calendar-sources").then((r) => r.data),
   });
@@ -340,7 +340,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             ))}
 
             {/* "Connect Google" button — shown only when not yet connected */}
-            {!googleSource && (
+            {!sourcesLoading && !googleSource && (
               <button
                 type="button"
                 disabled={googleInit.isPending}
@@ -370,7 +370,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             )}
 
             {/* "Connect Outlook" button — shown only when not yet connected */}
-            {!outlookSource && (
+            {!sourcesLoading && !outlookSource && (
               <button
                 type="button"
                 disabled={outlookInit.isPending}
@@ -400,7 +400,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             )}
 
             {/* "Add holidays" button — shown only when no holiday source is synced yet */}
-            {!holidaySource && (
+            {!sourcesLoading && !holidaySource && (
               <button
                 type="button"
                 disabled={syncHolidays.isPending}

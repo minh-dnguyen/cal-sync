@@ -177,14 +177,15 @@ async def fetch_events(
     refresh_token: Optional[str],
     time_min: datetime,
     time_max: datetime,
-) -> tuple[list[dict], str]:
+) -> tuple[list[dict], str, Optional[str]]:
     """Fetch all events from the user's primary Outlook calendar.
 
     Uses Microsoft Graph /me/calendarView with automatic token refresh on 401.
     Follows @odata.nextLink to retrieve all pages.
 
     Returns:
-        (events, valid_access_token) — the token that succeeded (may be refreshed).
+        (events, valid_access_token, new_refresh_token) — tokens may be refreshed.
+        new_refresh_token is None if no refresh occurred.
     """
     # Graph API requires ISO 8601 with timezone suffix
     fmt = "%Y-%m-%dT%H:%M:%SZ"
@@ -200,6 +201,7 @@ async def fetch_events(
 
     headers = {"Authorization": f"Bearer {access_token}"}
     all_events: list[dict] = []
+    new_refresh_token: Optional[str] = None
 
     async with httpx.AsyncClient(timeout=30.0) as client:
         url = f"{_GRAPH_API}/me/calendarView"
@@ -216,6 +218,7 @@ async def fetch_events(
             if resp.status_code == 401 and refresh_token:
                 new_tokens = await refresh_access_token(refresh_token)
                 access_token = new_tokens["access_token"]
+                new_refresh_token = new_tokens.get("refresh_token")
                 headers = {"Authorization": f"Bearer {access_token}"}
                 resp = await client.get(
                     url,
@@ -228,7 +231,7 @@ async def fetch_events(
             all_events.extend(body.get("value", []))
             url = body.get("@odata.nextLink")  # None when last page reached
 
-    return all_events, access_token
+    return all_events, access_token, new_refresh_token
 
 
 def parse_outlook_event(o_event: dict) -> Optional[dict]:

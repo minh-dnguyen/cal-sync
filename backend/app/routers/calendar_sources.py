@@ -242,7 +242,7 @@ async def sync_source(
     # ── Outlook sync ──────────────────────────────────────────────────────────
     else:
         try:
-            raw_events, fresh_token = await ocs.fetch_events(
+            raw_events, fresh_token, fresh_refresh = await ocs.fetch_events(
                 source.access_token, source.refresh_token, time_min, time_max,
             )
         except Exception:
@@ -250,6 +250,9 @@ async def sync_source(
 
         if fresh_token != source.access_token:
             source.access_token = fresh_token
+            db.flush()
+        if fresh_refresh:
+            source.refresh_token = fresh_refresh
             db.flush()
 
         colors_map: dict = {}

@@ -193,7 +193,7 @@ export default function SettingsPage() {
     },
   });
 
-  const { data: sources = [] } = useQuery<CalendarSource[]>({
+  const { data: sources = [], isLoading: sourcesLoading } = useQuery<CalendarSource[]>({
     queryKey: ["calendar-sources"],
     queryFn: () => api.get("/api/v1/calendar-sources").then((r) => r.data),
   });
@@ -460,7 +460,9 @@ export default function SettingsPage() {
           )}
 
           <FieldRow label="Google Calendar">
-            {googleSource ? (
+            {sourcesLoading ? (
+              <div className="h-8 w-40 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
+            ) : googleSource ? (
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {googleSource.connected_email
@@ -536,7 +538,9 @@ export default function SettingsPage() {
           </FieldRow>
 
           <FieldRow label="Outlook Calendar">
-            {outlookSource ? (
+            {sourcesLoading ? (
+              <div className="h-8 w-40 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
+            ) : outlookSource ? (
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {outlookSource.connected_email
