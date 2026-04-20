@@ -8,12 +8,12 @@ from slowapi.middleware import SlowAPIMiddleware
 from app.config import settings
 from app.routers import auth, users, events, calendar_sources
 
-limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"], storage_uri="redis://redis:6379/0")
+limiter = Limiter(key_func=get_remote_address, default_limits=["60/minute"], storage_uri=settings.REDIS_URL)
 
 app = FastAPI(
     title="CalSync API",
     version="1.0.0",
-    description="Calendar synchronization bckend for CalSync PWA",
+    description="Calendar synchronization backend for CalSync PWA",
 )
 
 app.state.limiter = limiter

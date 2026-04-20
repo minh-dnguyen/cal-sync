@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   },
   icons: {
     apple: "/icons/icon-192.png",
+    icon: "/icons/icon-192.png",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
   },
 };
 

@@ -39,3 +39,8 @@ Thumbs.db
 
 # Docker
 *.log
+
+# Celery Beat schedule (auto-generated binary, never commit)
+celerybeat-schedule
+celerybeat-schedule.db
+celerybeat.pid

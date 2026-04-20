@@ -14,14 +14,17 @@ function DashboardInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mounted, setMounted] = useState(false);
   useEventSyncListener();
   useInactivityTimeout();
 
-  useEffect(() => {
-    if (!token) router.replace("/login");
-  }, [token, router]);
+  useEffect(() => { setMounted(true); }, []);
 
-  if (!token) return null;
+  useEffect(() => {
+    if (mounted && !token) router.replace("/login");
+  }, [token, router, mounted]);
+
+  if (!mounted || !token) return null;
 
   // Hide the sidebar on the settings page without touching sidebarOpen state,
   // so it restores automatically when navigating back.
