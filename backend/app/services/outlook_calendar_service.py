@@ -47,11 +47,11 @@ OUTLOOK_PRESET_COLORS: dict[str, str] = {
 }
 
 
-def build_auth_url(redirect_uri: Optional[str] = None) -> str:
+def build_auth_url() -> str:
     """Return the Microsoft OAuth2 authorization URL to redirect the user to."""
     params = {
         "client_id": settings.MICROSOFT_CLIENT_ID,
-        "redirect_uri": redirect_uri or settings.MICROSOFT_REDIRECT_URI,
+        "redirect_uri": settings.MICROSOFT_REDIRECT_URI,
         "response_type": "code",
         "scope": SCOPES,
         "response_mode": "query",
@@ -61,7 +61,7 @@ def build_auth_url(redirect_uri: Optional[str] = None) -> str:
     return f"{_AUTH_URL}?{urlencode(params)}"
 
 
-async def exchange_code(code: str, redirect_uri: Optional[str] = None) -> dict:
+async def exchange_code(code: str) -> dict:
     """Exchange an authorization code for access + refresh tokens.
 
     Returns a dict with at least:
@@ -74,7 +74,7 @@ async def exchange_code(code: str, redirect_uri: Optional[str] = None) -> dict:
                 "code": code,
                 "client_id": settings.MICROSOFT_CLIENT_ID,
                 "client_secret": settings.MICROSOFT_CLIENT_SECRET,
-                "redirect_uri": redirect_uri or settings.MICROSOFT_REDIRECT_URI,
+                "redirect_uri": settings.MICROSOFT_REDIRECT_URI,
                 "grant_type": "authorization_code",
                 "scope": SCOPES,
             },

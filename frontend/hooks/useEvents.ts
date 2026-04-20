@@ -81,14 +81,8 @@ export function useSyncHolidays() {
 /** Initiate Google Calendar OAuth — fetches the Google authorization URL. */
 export function useGoogleInit() {
   return useMutation({
-    mutationFn: () => {
-      const redirectUri = typeof window !== "undefined"
-        ? `${window.location.origin}/auth/google/callback`
-        : undefined;
-      return api
-        .get<{ auth_url: string }>("/api/v1/auth/google/init", { params: { redirect_uri: redirectUri } })
-        .then((r) => r.data.auth_url);
-    },
+    mutationFn: () =>
+      api.get<{ auth_url: string }>("/api/v1/auth/google/init").then((r) => r.data.auth_url),
   });
 }
 
@@ -108,14 +102,8 @@ export function useSyncGoogleCalendar() {
 /** Initiate Outlook Calendar OAuth — fetches the Microsoft authorization URL. */
 export function useOutlookInit() {
   return useMutation({
-    mutationFn: () => {
-      const redirectUri = typeof window !== "undefined"
-        ? `${window.location.origin}/auth/outlook/callback`
-        : undefined;
-      return api
-        .get<{ auth_url: string }>("/api/v1/auth/outlook/init", { params: { redirect_uri: redirectUri } })
-        .then((r) => r.data.auth_url);
-    },
+    mutationFn: () =>
+      api.get<{ auth_url: string }>("/api/v1/auth/outlook/init").then((r) => r.data.auth_url),
   });
 }
 

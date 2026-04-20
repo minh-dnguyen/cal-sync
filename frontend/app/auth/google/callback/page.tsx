@@ -42,9 +42,8 @@ function CallbackHandler() {
       return;
     }
 
-    const redirectUri = `${window.location.origin}/auth/google/callback`;
     api
-      .post("/api/v1/auth/google/exchange", { code, redirect_uri: redirectUri })
+      .post("/api/v1/auth/google/exchange", { code })
       .then(() => {
         // Signal settings page to show the color-preference dialog
         localStorage.setItem("calsync-google-just-connected", "true");
